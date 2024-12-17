@@ -6,7 +6,7 @@
 #    By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/05 14:52:54 by mbiagi            #+#    #+#              #
-#    Updated: 2024/12/07 15:24:54 by mbiagi           ###   ########.fr        #
+#    Updated: 2024/12/17 10:39:18 by mbiagi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ CFLAGS = -Wall -Wextra -Werror
 AR = ar rcs
 CP = cp
 NAME = libftprintf.a
-LIBFT = libft/libft.a
-LIBFTDIR = libft/
+LIBFT = Libft/libft.a
+LIBFTDIR = Libft/
 
 SRC = ft_printf.c ft_putnbr_hex.c ft_putnbr_long.c ft_putnbr_un.c ft_putchar.c \
 	ft_putstr.c ft_putnbr.c
