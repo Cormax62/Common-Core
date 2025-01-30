@@ -6,20 +6,19 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:07:14 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/28 08:54:54 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/01/29 09:57:34 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	ft_matrixlen(char  **matrix)
+int	ft_matrixlen(char **matrix)
 {
 	int	i;
 
 	i = 0;
 	while (matrix[i])
 		i++;
-	ft_printf("%d\n", i);
 	return (i);
 }
 
@@ -68,9 +67,9 @@ int	digit_control(char **split_c)
 		i = 0;
 		while (split_c[j][i])
 		{
-			if ((split_c[j][i] == '+') || (split_c[j][i] == '-'))
+			if (((split_c[j][i] == '+') || (split_c[j][i] == '-')) && i == 0)
 				i++;
-			if (ft_isdigit(split_c[j][i]) == 0 )
+			if (ft_isdigit(split_c[j][i]) == 0)
 				return (ft_printf("digit"), 0);
 			i++;
 		}

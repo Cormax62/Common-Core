@@ -6,17 +6,17 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 11:00:49 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/13 14:23:21 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/01/29 10:35:38 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void *))
+void	ft_lstdelone(t_list *lst, void (*del)(int))
 {
 	if (lst)
 	{
-		del(lst -> content);
+		del(lst -> n);
 		free(lst);
 	}
 }
