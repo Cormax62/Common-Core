@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:43:37 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/29 17:51:30 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/01 13:03:52 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	push(t_list **stack_a, t_list **stack_b, bool c)
 		temp = *stack_b;
 		*stack_b = (*stack_b)->next;
 		ft_lstadd_front(stack_a, temp);
-		free(temp);
+		// free(temp);
 		ft_printf("pa\n");
 	}
 	else if (c == false)
@@ -61,7 +61,7 @@ void	push(t_list **stack_a, t_list **stack_b, bool c)
 		temp = *stack_a;
 		*stack_a = (*stack_a)->next;
 		ft_lstadd_front(stack_b, temp);
-		free(temp);
+		// free(temp);
 		ft_printf("pb\n");
 	}
 }

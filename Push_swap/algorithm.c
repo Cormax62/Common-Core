@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:13:44 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/29 18:00:15 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/01 13:37:09 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,163 @@
 void	control_alg(t_list *stack_a)
 {
 	t_list	*stack_b;
-	// t_list	*temp;
 
-	// temp = stack_a;
 	stack_b = NULL;
-	if ((ft_lstsize(stack_a) == 2) && (stack_a->n > (stack_a->next)->n))
+	if (ft_lstsize(stack_a) == 1)
+		return (ft_free_lst(stack_a));
+	else if ((ft_lstsize(stack_a) == 2) && (stack_a->n > (stack_a->next)->n))
 		swap(stack_a, stack_b, 1, 0);
-	if (ft_lstsize(stack_a) == 3)
+	else if (ft_lstsize(stack_a) == 3)
 		alg_x_3(&stack_a, &stack_b);
+	else if (ft_lstsize(stack_a) == 4)
+		alg_x_4(&stack_a, &stack_b);
+	else if (ft_lstsize(stack_a) == 5)
+		alg_x_5(&stack_a, &stack_b);
 	ft_free_lst(stack_a);
+}
+
+void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t)
+{
+	t = *stack_a;
+	if (t->next->n == s->n)
+	{
+		swap(*stack_a, *stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_4(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else if (t->next->next->n == s->n)
+	{
+		rotate(stack_a, stack_b, 1, 0);
+		swap(*stack_a, *stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_4(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else
+	{
+		reverse(stack_a, stack_b, 1, 0);
+		reverse(stack_a, stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_4(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+}
+
+void	alg_x_5(t_list **stack_a, t_list **stack_b)
+{
+	t_list	*stack;
+	t_list	*temp;
+
+	temp = *stack_a;
+	stack = *stack_a;
+	if (seq_control(stack) == 1)
+		return ;
+	stack = find_min(stack);
+	if (temp->n == stack->n)
+	{
+		push(stack_a, stack_b, 0);
+		alg_x_4(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else if (ft_lstlast(temp)->n == stack->n)
+	{
+		reverse(stack_a, stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_4(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else
+		handle_push2(stack_a, stack_b, stack, temp);
+}
+
+int	seq_control(t_list *stack)
+{
+	int		num;
+	t_list	*temp;
+
+	num = 1;
+	temp = stack;
+	while (stack->next)
+	{
+		if (stack->n < (stack->next)->n)
+			num++;
+		else
+			num = 0;
+		stack = stack->next;
+	}
+	if (num == ft_lstsize(temp))
+		return (1);
+	else
+		return (0);
+}
+
+t_list	*find_min(t_list * stack)
+{
+	int	num;
+	t_list	*temp;
+
+	num = stack->n;
+	temp = stack;
+	while (stack)
+	{
+		if (num > stack->n)
+		{
+			num = stack->n;
+			temp = stack;
+		}
+		stack = stack->next;
+	}
+	return (temp);
+}
+
+void	handle_push(t_list **stack_a, t_list **stack_b, t_list *stack)
+{
+	t_list	*temp;
+
+	temp = *stack_a;
+	if (temp->next->n == stack->n)
+	{
+		swap(*stack_a, *stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_3(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else
+	{
+		reverse(stack_a, stack_b, 1, 0);
+		reverse(stack_a, stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_3(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+}
+
+void	alg_x_4(t_list **stack_a, t_list **stack_b)
+{
+	t_list	*stack;
+	t_list	*temp;
+
+	temp = *stack_a;
+	stack = *stack_a;
+	if (seq_control(stack) == 1)
+		return ;
+	stack = find_min(stack);
+	if (temp->n == stack->n)
+	{
+		push(stack_a, stack_b, 0);
+		alg_x_3(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else if (ft_lstlast(temp)->n == stack->n)
+	{
+		reverse(stack_a, stack_b, 1, 0);
+		push(stack_a, stack_b, 0);
+		alg_x_3(stack_a, stack_b);
+		push(stack_a, stack_b, 1);
+	}
+	else
+		handle_push(stack_a, stack_b, stack);
 }
 
 void	alg_x_3_pt2(t_list **stack_a, t_list **stack_b, t_list *temp)

@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:45:51 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/29 16:58:40 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/01 13:29:11 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,11 @@ void	control_alg(t_list *stack_a);
 void	alg_x_3(t_list **stack_a, t_list **stack_b);
 void	alg_x_3_pt2(t_list **stack_a, t_list **stack_b, t_list * temp);
 void	ft_free_lst(t_list *lst);
+void	alg_x_4(t_list **stack_a, t_list **stack_b);
+void	handle_push(t_list **stack_a, t_list **stack_b, t_list *stack);
+t_list	*find_min(t_list * stack);
+int		seq_control(t_list *stack);
+void	alg_x_5(t_list **stack_a, t_list **stack_b);
+void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t);
 
 #endif

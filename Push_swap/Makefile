@@ -6,7 +6,7 @@
 #    By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/27 09:27:58 by mbiagi            #+#    #+#              #
-#    Updated: 2025/01/29 14:52:54 by mbiagi           ###   ########.fr        #
+#    Updated: 2025/02/01 10:16:37 by mbiagi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = push_swap
 LIB = -Lprintf -lftprintf -L./libft -lft -g
 
-SRC = push_swap_utils.c push_swap.c atol.c operations.c algorithm.c
+SRC = push_swap_utils.c push_swap.c operations.c algorithm.c push_swap_utils2.c
 
 OBJ = $(SRC:.c=.o)
 

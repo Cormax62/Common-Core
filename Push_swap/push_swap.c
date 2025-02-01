@@ -6,24 +6,11 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:45:44 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/29 17:06:38 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/01 10:15:17 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void	ft_free_lst(t_list *lst)
-{
-	t_list	*temp;
-
-	while (lst)
-	{
-		ft_printf("free %d\n", lst->n);
-		temp = lst->next;
-		free(lst);
-		lst = temp;
-	}
-}
 
 t_list	*create_lst(char **c)
 {
@@ -65,7 +52,7 @@ t_list	*one_str_handle(char *argv)
 		return (ft_putstr_fd("Error\n[invalid argument]", 2), NULL);
 	}
 	stack = create_lst(split_c);
-	free(split_c);
+	ft_free(split_c);
 	return (stack);
 }
 

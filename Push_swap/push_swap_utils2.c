@@ -1,16 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   atol.c                                             :+:      :+:    :+:   */
+/*   push_swap_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/24 16:20:39 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/24 16:27:16 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/02/01 10:15:09 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/02/01 13:39:25 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void	ft_free_lst(t_list *lst)
+{
+	t_list	*temp;
+
+	while (lst)
+	{
+		ft_printf("free %d\n", lst->n);
+		temp = lst->next;
+		free(lst);
+		lst = temp;
+	}
+}
 
 static long	ft_number(const char *c, int x, int sign)
 {
