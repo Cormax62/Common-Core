@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:45:51 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/01 13:29:11 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/04 14:18:42 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,6 @@
 # include <X11/X.h>
 # include <X11/keysym.h>
 # include <stdbool.h>
-
-// typedef struct s_list
-// {
-// 	int				n;
-// 	struct s_list	*next;
-// }	t_list;
 
 void	ft_free(char **matrix);
 int		digit_control(char **split_c);
@@ -60,5 +54,16 @@ t_list	*find_min(t_list * stack);
 int		seq_control(t_list *stack);
 void	alg_x_5(t_list **stack_a, t_list **stack_b);
 void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t);
+void	serious_alg(t_list **stack_a, t_list **stack_b);
+void	set(t_list **stack_a, t_list **stack_b);
+void	push_nodes(t_list **stack_a, t_list **stack_b);
+t_list	*find_min(t_list *stack);
+void	set_cheapest(t_list *stack_b);
+void	set_price(t_list *stack_a, t_list *stack_b);
+void	set_target(t_list *stack_a, t_list *stack_b);
+void	set_position(t_list *stack);
+void	move(t_list **stack_a, t_list **stack_b);
+void	finish(t_list **stack_a, t_list *top, char c);
+t_list	*find_cheappest(t_list *stack);
 
 #endif

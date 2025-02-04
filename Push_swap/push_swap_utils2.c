@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 10:15:09 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/01 13:39:25 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/04 13:48:42 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,25 @@ long	ft_atol(const char *nptr)
 	else if ((nptr[x] < 48) || (nptr[x] > 57))
 		return (0);
 	return (ft_number(nptr, x, sign));
+}
+
+int	seq_control(t_list *stack)
+{
+	int		num;
+	t_list	*temp;
+
+	num = 1;
+	temp = stack;
+	while (stack->next)
+	{
+		if (stack->n < (stack->next)->n)
+			num++;
+		else
+			num = 0;
+		stack = stack->next;
+	}
+	if (num == ft_lstsize(temp))
+		return (1);
+	else
+		return (0);
 }

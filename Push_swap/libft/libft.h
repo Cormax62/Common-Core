@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:54:15 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/29 17:30:36 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/04 09:27:23 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,16 @@
 # include <linux/stat.h>
 # include <sys/stat.h>
 # include <stddef.h>
+# include <stdbool.h>
 
 typedef struct s_list
 {
-	int			n;
+	int				position;
+	int				price;
+	bool			above;
+	bool			cheapest;
+	int				n;
+	struct s_list	*target;
 	struct s_list	*next;
 }	t_list;
 
