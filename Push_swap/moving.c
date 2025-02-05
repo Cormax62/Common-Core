@@ -27,12 +27,8 @@ t_list	*find_cheappest(t_list *stack)
 
 void	finish(t_list **stack, t_list *top, char c)
 {
-	t_list	*temp;
-
-	temp = *stack;
-	while (temp != top)
+	while (*stack != top)
 	{
-		temp = *stack;
 		if (c == 'b')
 		{
 			if (top->above)
