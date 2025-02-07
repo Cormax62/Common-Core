@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:47:26 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/04 15:23:18 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 09:09:27 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,29 +82,29 @@ void	alg_x_4(t_list **stack_a, t_list **stack_b)
 
 void	serious_alg(t_list **stack_a, t_list **stack_b)
 {
-	t_list	*a;
-	t_list	*b;
+	// t_list	*a;
+	// t_list	*b;
 	t_list	*min;
 	int		small;
 
-	a = *stack_a;
-	if (seq_control(a) == 1)
+	// a = *stack_a;
+	if (seq_control(*stack_a) == 1)
 		return ;
 	push_nodes(stack_a, stack_b);
-	b = *stack_b;
+	// b = *stack_b;
 	while (*stack_b)
 	{
 		set(stack_a, stack_b);
 		move(stack_a, stack_b);
 	}
-	set_position(a);
-	min = find_min(a);
+	set_position(*stack_a);
+	min = find_min(*stack_a);
 	small = min->n;
-	a = *stack_a;
+	// a = *stack_a;
 	if (min->above)
-		while (((*stack_a)->n != min->n) && (a->n != small))
+		while (((*stack_a)->n != min->n) && ((*stack_a)->n != small))
 			rotate(stack_a, stack_b, 1, 0);
 	else
-		while (((*stack_a)->n != min->n) && (a->n != small))
+		while (((*stack_a)->n != min->n) && ((*stack_a)->n != small))
 			reverse(stack_a, stack_b, 1, 0);
 }

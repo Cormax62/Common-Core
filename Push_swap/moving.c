@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:34:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/04 14:59:28 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 10:50:19 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,15 @@ void	move(t_list **stack_a, t_list **stack_b)
 	a = *stack_a;
 	b = *stack_b;
 	cheap = find_cheappest(*stack_b);
-	if (cheap->above && cheap->target->above)
-		rotate(stack_a, stack_b, 1, 1);
+	if (cheap->above && cheap->target->above && \
+	cheap->target != *stack_a && cheap != *stack_b)
+		while(cheap->above && cheap->target->above && \
+		cheap->target != *stack_a && cheap != *stack_b)
+			rotate(stack_a, stack_b, 1, 1);
 	else if (!(cheap->above) && !(cheap->target->above))
-		reverse(stack_a, stack_b, 1, 1);
+		while(!(cheap->above) && !(cheap->target->above) && \
+		cheap->target != *stack_a && cheap != *stack_b)
+			reverse(stack_a, stack_b, 1, 1);
 	finish(stack_b, cheap, 'b');
 	finish(stack_a, cheap->target, 'a');
 	push(stack_a, stack_b, 1);

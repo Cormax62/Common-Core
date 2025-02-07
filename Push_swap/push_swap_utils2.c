@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 10:15:09 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/04 13:48:42 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 09:15:18 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_free_lst(t_list *lst)
 
 	while (lst)
 	{
-		ft_printf("free %d\n", lst->n);
+		// ft_printf("free %d\n", lst->n);
 		temp = lst->next;
 		free(lst);
 		lst = temp;
