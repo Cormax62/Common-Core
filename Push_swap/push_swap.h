@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:45:51 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/04 14:18:42 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 15:45:49 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ void	reverse(t_list **stack_a, t_list **stack_b, bool a, bool b);
 void	rr_funct(t_list **stack_b);
 void	rotate(t_list **stack_a, t_list **stack_b, bool a, bool b);
 void	push(t_list **stack_a, t_list **stack_b, bool c);
-void	swap(t_list *stack_a, t_list *stack_b, bool a, bool b);
+void	swap(t_list **stack_a, t_list **stack_b, bool a, bool b);
 void	control_alg(t_list *stack_a);
 void	alg_x_3(t_list **stack_a, t_list **stack_b);
-void	alg_x_3_pt2(t_list **stack_a, t_list **stack_b, t_list * temp);
+void	alg_x_3_pt2(t_list **stack_a, t_list **stack_b, t_list *temp);
 void	ft_free_lst(t_list *lst);
 void	alg_x_4(t_list **stack_a, t_list **stack_b);
 void	handle_push(t_list **stack_a, t_list **stack_b, t_list *stack);
-t_list	*find_min(t_list * stack);
+t_list	*find_min(t_list *stack);
 int		seq_control(t_list *stack);
 void	alg_x_5(t_list **stack_a, t_list **stack_b);
 void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t);
@@ -65,5 +65,6 @@ void	set_position(t_list *stack);
 void	move(t_list **stack_a, t_list **stack_b);
 void	finish(t_list **stack_a, t_list *top, char c);
 t_list	*find_cheappest(t_list *stack);
+int		min(int a, int b);
 
 #endif

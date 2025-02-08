@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:13:44 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/04 17:01:58 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 15:47:16 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	control_alg(t_list *stack_a)
 	if (ft_lstsize(stack_a) == 1)
 		return (ft_free_lst(stack_a));
 	else if ((ft_lstsize(stack_a) == 2) && (stack_a->n > (stack_a->next)->n))
-		swap(stack_a, stack_b, 1, 0);
+		swap(&stack_a, &stack_b, 1, 0);
 	else if (ft_lstsize(stack_a) == 3)
 		alg_x_3(&stack_a, &stack_b);
 	else if (ft_lstsize(stack_a) == 4)
@@ -37,7 +37,7 @@ void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t)
 	t = *stack_a;
 	if (t->next->n == s->n)
 	{
-		swap(*stack_a, *stack_b, 1, 0);
+		swap(stack_a, stack_b, 1, 0);
 		push(stack_a, stack_b, 0);
 		alg_x_4(stack_a, stack_b);
 		push(stack_a, stack_b, 1);
@@ -45,7 +45,7 @@ void	handle_push2(t_list **stack_a, t_list **stack_b, t_list *s, t_list *t)
 	else if (t->next->next->n == s->n)
 	{
 		rotate(stack_a, stack_b, 1, 0);
-		swap(*stack_a, *stack_b, 1, 0);
+		swap(stack_a, stack_b, 1, 0);
 		push(stack_a, stack_b, 0);
 		alg_x_4(stack_a, stack_b);
 		push(stack_a, stack_b, 1);
@@ -99,13 +99,13 @@ void	alg_x_3_pt2(t_list **stack_a, t_list **stack_b, t_list *temp)
 		else
 		{
 			reverse(stack_a, stack_b, 1, 0);
-			swap(*stack_a, *stack_b, 1, 0);
+			swap(stack_a, stack_b, 1, 0);
 		}
 	}
 	else
 	{
 		if ((*stack_a)->n < (temp->next)->n)
-			swap(*stack_a, *stack_b, 1, 0);
+			swap(stack_a, stack_b, 1, 0);
 		else
 			rotate(stack_a, stack_b, 1, 0);
 	}
@@ -133,7 +133,7 @@ void	alg_x_3(t_list **stack_a, t_list **stack_b)
 	if (n == 0)
 	{
 		rotate(&head, stack_b, 1, 0);
-		swap(head, *stack_b, 1, 0);
+		swap(&head, stack_b, 1, 0);
 	}
 	else if (n == 1)
 		alg_x_3_pt2(&head, stack_b, temp);

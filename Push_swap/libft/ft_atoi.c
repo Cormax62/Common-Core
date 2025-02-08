@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_utils2.c                                 :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 10:15:09 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/07 14:10:22 by mbiagi           ###   ########.fr       */
+/*   Created: 2024/11/20 16:53:51 by mbiagi            #+#    #+#             */
+/*   Updated: 2024/12/02 10:43:46 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-void	ft_free_lst(t_list *lst)
+static int	ft_number(const char *c, int x, int sign)
 {
-	t_list	*temp;
-
-	while (lst)
-	{
-		temp = lst->next;
-		free(lst);
-		lst = temp;
-	}
-}
-
-static long	ft_number(const char *c, int x, int sign)
-{
-	long	num;
+	int	num;
 
 	num = 0;
 	while ((c[x] >= 48) && (c[x] <= 57))
@@ -39,7 +28,7 @@ static long	ft_number(const char *c, int x, int sign)
 	return (num);
 }
 
-long	ft_atol(const char *nptr)
+int	ft_atoi(const char *nptr)
 {
 	int	x;
 	int	sign;
@@ -59,24 +48,13 @@ long	ft_atol(const char *nptr)
 		return (0);
 	return (ft_number(nptr, x, sign));
 }
-
-int	seq_control(t_list *stack)
+/* 
+int	main(void)
 {
-	int		num;
-	t_list	*temp;
+	char	*c;
 
-	num = 1;
-	temp = stack;
-	while (stack->next)
-	{
-		if (stack->n < (stack->next)->n)
-			num++;
-		else
-			num = 0;
-		stack = stack->next;
-	}
-	if (num == ft_lstsize(temp))
-		return (1);
-	else
-		return (0);
-}
+	c = " \n     +2147483647   ";
+	printf("%d\n", ft_atoi(c));
+	printf("%d\n", atoi(c));
+	return (0);
+} */

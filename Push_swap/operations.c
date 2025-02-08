@@ -6,31 +6,31 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:43:37 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/03 09:04:30 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/07 15:48:25 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	swap(t_list *stack_a, t_list *stack_b, bool a, bool b)
+void	swap(t_list **stack_a, t_list **stack_b, bool a, bool b)
 {
-	int	bank;
+	t_list	*bank;
 
 	if (a == true)
 	{
-		if (ft_lstsize(stack_a) <= 1)
+		if (ft_lstsize(*stack_a) <= 1)
 			return ;
-		bank = stack_a->n;
-		stack_a->n = (stack_a->next)->n;
-		(stack_a->next)->n = bank;
+		bank = (*stack_a)->next;
+		(*stack_a)->next = bank->next;
+		ft_lstadd_front(stack_a, bank);
 	}
 	if (b == true)
 	{
-		if (ft_lstsize(stack_b) <= 1)
+		if (ft_lstsize(*stack_b) <= 1)
 			return ;
-		bank = stack_b->n;
-		stack_b->n = (stack_b->next)->n;
-		(stack_b->next)->n = bank;
+		bank = (*stack_b)->next;
+		(*stack_b)->next = bank->next;
+		ft_lstadd_front(stack_b, bank);
 	}
 	if ((a == true) && (b == true))
 		ft_printf("ss\n");
