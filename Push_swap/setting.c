@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 09:24:49 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/08 11:51:52 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/10 09:51:42 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	set_price(t_list *stack_a, t_list *stack_b)
 			b->price += (ft_lstsize(stack_a) - b->target->position) - \
 			min((ft_lstsize(stack_a) - b->target->position), \
 			ft_lstsize(stack_b) - b->position);
-		else if ((b->above) && (b->target->position))
+		else if ((b->above) && (b->target->above))
 			b->price += b->target->position - \
 			min(b->target->position, b->position);
 		else if (b->target->above)

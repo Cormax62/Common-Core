@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:45:44 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/07 09:53:13 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/10 10:07:34 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_list	*more_str_handle(char **argv)
 {
 	if ((digit_control(argv) == 0) || (equals_control(argv) == 0) || \
 	(value_control(argv) == 0))
-		return (ft_putstr_fd("Error\n[invalid argument]", 2), NULL);
+		return (ft_putstr_fd("Error\n", 2), NULL);
 	return (create_lst(argv));
 }
 
@@ -43,13 +43,13 @@ t_list	*one_str_handle(char *argv)
 	char	**split_c;
 
 	if (argv[0] == '\0')
-		return (ft_putstr_fd("Error\n[invalid argument]", 2), NULL);
+		return (ft_putstr_fd("Error\n", 2), NULL);
 	split_c = ft_split(argv, ' ');
 	if ((digit_control(split_c) == 0) || (equals_control(split_c) == 0) || \
 	(value_control(split_c) == 0))
 	{
 		ft_free(split_c);
-		return (ft_putstr_fd("Error\n[invalid argument]", 2), NULL);
+		return (ft_putstr_fd("Error\n", 2), NULL);
 	}
 	stack = create_lst(split_c);
 	ft_free(split_c);
@@ -67,6 +67,7 @@ int	main(int argc, char **argv)
 		stack = one_str_handle(argv[1]);
 	else if (argc > 2)
 		stack = more_str_handle(&argv[1]);
-	control_alg(stack);
+	if (stack != NULL)
+		control_alg(stack);
 	return (0);
 }

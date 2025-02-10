@@ -6,23 +6,11 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 10:15:09 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/07 14:10:22 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/10 10:18:40 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void	ft_free_lst(t_list *lst)
-{
-	t_list	*temp;
-
-	while (lst)
-	{
-		temp = lst->next;
-		free(lst);
-		lst = temp;
-	}
-}
 
 static long	ft_number(const char *c, int x, int sign)
 {
@@ -58,25 +46,4 @@ long	ft_atol(const char *nptr)
 	else if ((nptr[x] < 48) || (nptr[x] > 57))
 		return (0);
 	return (ft_number(nptr, x, sign));
-}
-
-int	seq_control(t_list *stack)
-{
-	int		num;
-	t_list	*temp;
-
-	num = 1;
-	temp = stack;
-	while (stack->next)
-	{
-		if (stack->n < (stack->next)->n)
-			num++;
-		else
-			num = 0;
-		stack = stack->next;
-	}
-	if (num == ft_lstsize(temp))
-		return (1);
-	else
-		return (0);
 }
