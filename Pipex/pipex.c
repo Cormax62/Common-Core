@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:11:52 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/18 12:09:12 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/18 13:55:23 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ void	child(int arc, char **argv, char **env, t_file fd)
 	i = -1;
 	while (arc - 4 > ++i)
 	{
+		closefd(fd.pipefd);
 		pipe(fd.pipefd);
+		//
 		forking(&pid, fd.pipefd);
 		if (pid == 0)
 		{
@@ -91,7 +93,7 @@ void	child(int arc, char **argv, char **env, t_file fd)
 		{
 			dup2(fd.pipefd[0], 0);
 			closefd(fd.pipefd);
-			close(fd.file[0]);
+			close(fd.file[0]);			
 		}
 		//wait (NULL);
 	}
@@ -124,6 +126,7 @@ int	main(int arc, char **argv, char **env)
 	if (pid == 0)
 	{
 		child(arc, argv, env, fd);
+		closefd(fd.pipefd);
 		dup2(fd.file[1], 1);
 		close(fd.file[1]);
 		execve(parse_cmd(ft_substr(argv[arc - 2], 0, \
