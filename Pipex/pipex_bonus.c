@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 14:11:52 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/25 08:36:31 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/02/20 15:20:34 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/02/25 09:18:12 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,21 @@ char	*parse_cmd(char *argv, char **env)
 		free(command);
 		i++;
 	}
-	return (free(argv), freemtr(path), NULL);
+	freemtr(path);
+	return (free(argv), NULL);
 }
 
-int	args_control(int arc, char **argv, int *file)
+int	args_control2(t_file *fd, int arc, char **argv, int *file)
 {
 	int	i;
 
 	i = 0;
-	if (arc != 5)
+	if (arc < 5)
 		return (0);
-	file[0] = open(argv[1], O_RDONLY);
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		file[0] = here_doc(fd, argv);
+	else
+		file[0] = open(argv[1], O_RDONLY);
 	file[1] = open(argv[arc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if ((file[0] == -1) || (file [1] == -1))
 		return (0);
@@ -73,9 +77,9 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		dup2(fd.pipefd[1], 1);
 		closefd(fd.pipefd);
 		closefd(fd.file);
-		path = parse_cmd(ft_substr(argv[2 + fd.i], 0, \
-		find_space(argv[2 + fd.i])), env);
-		arg = ft_split(argv[2 + fd.i], ' ');
+		path = parse_cmd(ft_substr(argv[2 + fd.i + fd.here_d], 0, \
+		find_space(argv[2 + fd.i + fd.here_d])), env);
+		arg = ft_split(argv[2 + fd.i + fd.here_d], ' ');
 		if (!path || !arg)
 			return (free(path), freemtr(arg));
 		execve(path, arg, env);
@@ -85,6 +89,7 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		dup2(fd.pipefd[0], 0);
 		closefd(fd.pipefd);
 		close(fd.file[0]);
+		waitpid(pid, NULL, 0);
 	}
 }
 
@@ -107,28 +112,20 @@ void	child_do(t_file fd, int arc, char **argv, char **env)
 int	main(int arc, char **argv, char **env)
 {
 	t_file	fd;
-	pid_t	pid;
 
 	fd.i = -1;
-	if ((args_control(arc, argv, fd.file) == 0) || (pipe(fd.pipefd) == -1))
-		return (1);
+	fd.here_d = 0;
+	if (args_control2(&fd, arc, argv, fd.file) == 0)
+		return (4);
 	dup2(fd.file[0], 0);
 	close(fd.file[0]);
-	while (arc - 4 >= ++fd.i)
+	if (fd.here_d == 1)
+		unlink("here_doc");
+	while (arc - 4 + fd.here_d >= ++fd.i)
 	{
-		forking(&pid, fd.pipefd);
-		if (arc - 4 > fd.i)
-			child(pid, argv, env, fd);
-		else
-		{
-			if (pid == 0 && (arc - 4 == fd.i))
-				child_do(fd, arc, argv, env);
-			else
-			{
-				close(fd.file[1]);
-				closefd(fd.pipefd);
-			}
-		}
+		if (pipe(fd.pipefd) == -1)
+			return (3);
+		for_fork(arc, argv, env, fd);
 	}
 	return (0);
 }

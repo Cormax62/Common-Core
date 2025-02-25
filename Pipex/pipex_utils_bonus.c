@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 11:25:26 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/21 10:35:17 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/02/21 09:14:47 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/02/25 09:17:46 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,11 @@ void	freemtr(char **matrix)
 		i++;
 	}
 	free(matrix);
+}
+
+void	parent(t_file fd, pid_t pid)
+{
+	close(fd.file[1]);
+	closefd(fd.pipefd);
+	waitpid(pid, NULL, 0);
 }

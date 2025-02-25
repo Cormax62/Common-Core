@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:15:40 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/01/22 08:53:39 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/24 13:34:06 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		i++;
 	}
 	return (ptr);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	int	x;
-
-	x = 0;
-	while (s[x] != 0)
-		x++;
-	return (x);
 }
 
 char	*ft_strjoin3(char *s1, char const *s2)

@@ -6,38 +6,52 @@
 #    By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 14:11:58 by mbiagi            #+#    #+#              #
-#    Updated: 2025/02/17 15:16:16 by mbiagi           ###   ########.fr        #
+#    Updated: 2025/02/24 13:32:42 by mbiagi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 NAME = pipex
-LIB = -Lprintf -lftprintf -L./libft -lft -g
+BONUS = pipex_bonus
+LIB = -Lprintf -lftprintf -L./libft -lft -Lget_next_line -lget_next_line -g
 
-SRC = pipex.c
+SRC = pipex.c pipex_utils.c
+
+SRC_BONUS = pipex_bonus.c pipex_utils_bonus.c here_doc.c
 
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
+OBJ_BONUS = $(SRC_BONUS:.c=.o)
+
+all: $(NAME) $(BONUS)
+
+$(BONUS): $(OBJ_BONUS)
+	make -C libft/
+	make -C printf/
+	make -C get_next_line/
+	$(CC) $(CFLAGS) $(OBJ_BONUS) $(LIB) -o $(BONUS)
 
 $(NAME): $(OBJ)
 	make -C libft/
 	make -C printf/
-	$(CC) $(OBJ) $(LIB) -o $(NAME)
+	make -C get_next_line/
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -g -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) $(OBJ_BONUS)
 	make clean -C libft/
 	make clean -C printf/
+	make clean -C get_next_line/
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(BONUS)
 	make fclean -C libft/
 	make fclean -C printf/
+	make fclean -C get_next_line/
 	
 
 re: fclean all
