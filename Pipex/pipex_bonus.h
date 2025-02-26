@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 14:11:55 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/26 10:14:40 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/02/26 13:38:30 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/02/26 13:39:38 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
 

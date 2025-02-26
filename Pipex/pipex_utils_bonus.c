@@ -6,11 +6,11 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:14:47 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/25 09:17:46 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/26 13:40:55 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	closefd(int pipefd[2])
 {
@@ -57,9 +57,22 @@ void	freemtr(char **matrix)
 	free(matrix);
 }
 
-void	parent(t_file fd, pid_t pid)
+void	for_fork(int arc, char **argv, char **env, t_file fd)
 {
-	close(fd.file[1]);
-	closefd(fd.pipefd);
-	waitpid(pid, NULL, 0);
+	pid_t	pid;
+
+	forking(&pid, fd.pipefd);
+	if (arc - 4 - fd.here_d > fd.i)
+		child(pid, argv, env, fd);
+	else
+	{
+		if (pid == 0 && (arc - 4 - fd.here_d == fd.i))
+			child_do(fd, arc, argv, env);
+		else
+		{
+			close(fd.file[1]);
+			closefd(fd.pipefd);
+			waitpid(pid, NULL, 0);
+		}
+	}
 }

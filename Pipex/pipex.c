@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:11:52 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/25 08:36:31 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/26 12:12:57 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	args_control(int arc, char **argv, int *file)
 	file[0] = open(argv[1], O_RDONLY);
 	file[1] = open(argv[arc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if ((file[0] == -1) || (file [1] == -1))
-		return (0);
+		return (closefd(file), 0);
 	while (argv[i])
 	{
 		if (argv[i][0] == '\0')
-			return (0);
+			return (closefd(file), 0);
 		i++;
 	}
 	if ((access(argv[1], F_OK) != 0) || \
@@ -77,7 +77,7 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		find_space(argv[2 + fd.i])), env);
 		arg = ft_split(argv[2 + fd.i], ' ');
 		if (!path || !arg)
-			return (free(path), freemtr(arg));
+			return (free(path), freemtr(arg), exit(1));
 		execve(path, arg, env);
 	}
 	else
@@ -100,35 +100,27 @@ void	child_do(t_file fd, int arc, char **argv, char **env)
 	find_space(argv[arc - 2])), env);
 	arg = ft_split(argv[arc - 2], ' ');
 	if (!path || !arg)
-		return (free(path), freemtr(arg));
+		return (free(path), freemtr(arg), exit(1));
 	execve(path, arg, env);
 }
 
 int	main(int arc, char **argv, char **env)
 {
 	t_file	fd;
-	pid_t	pid;
+	int		w;
 
 	fd.i = -1;
+	fd.here_d = 0;
+	w = 0;
 	if ((args_control(arc, argv, fd.file) == 0) || (pipe(fd.pipefd) == -1))
 		return (1);
 	dup2(fd.file[0], 0);
 	close(fd.file[0]);
 	while (arc - 4 >= ++fd.i)
 	{
-		forking(&pid, fd.pipefd);
-		if (arc - 4 > fd.i)
-			child(pid, argv, env, fd);
-		else
-		{
-			if (pid == 0 && (arc - 4 == fd.i))
-				child_do(fd, arc, argv, env);
-			else
-			{
-				close(fd.file[1]);
-				closefd(fd.pipefd);
-			}
-		}
+		for_fork(arc, argv, env, fd);
 	}
+	while (wait(&w) > 0)
+		;
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 14:11:58 by mbiagi            #+#    #+#              #
-#    Updated: 2025/02/24 13:32:42 by mbiagi           ###   ########.fr        #
+#    Updated: 2025/02/26 08:46:34 by mbiagi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,19 +24,21 @@ OBJ = $(SRC:.c=.o)
 
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
+$(NAME): $(OBJ)
+	make -C libft/
+	make -C printf/
+	make -C get_next_line/
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
+
 all: $(NAME) $(BONUS)
+
+bonus: $(BONUS)
 
 $(BONUS): $(OBJ_BONUS)
 	make -C libft/
 	make -C printf/
 	make -C get_next_line/
 	$(CC) $(CFLAGS) $(OBJ_BONUS) $(LIB) -o $(BONUS)
-
-$(NAME): $(OBJ)
-	make -C libft/
-	make -C printf/
-	make -C get_next_line/
-	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -g -c $< -o $@

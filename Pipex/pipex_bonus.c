@@ -6,11 +6,11 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:20:34 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/25 09:18:12 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/02/26 13:40:43 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	*parse_cmd(char *argv, char **env)
 {
@@ -45,24 +45,27 @@ int	args_control2(t_file *fd, int arc, char **argv, int *file)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (arc < 5)
 		return (0);
 	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
-		file[0] = here_doc(fd, argv);
-	else
-		file[0] = open(argv[1], O_RDONLY);
-	file[1] = open(argv[arc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if ((file[0] == -1) || (file [1] == -1))
-		return (0);
-	while (argv[i])
 	{
-		if (argv[i][0] == '\0')
-			return (0);
-		i++;
+		file[0] = here_doc(fd, argv);
+		file[1] = open(argv[arc - 1], O_RDWR | O_CREAT, 0777);
 	}
-	if ((access(argv[1], F_OK) != 0) || \
-	(access(argv[1], R_OK) != 0))
+	else
+	{
+		file[0] = open(argv[1], O_RDONLY);
+		file[1] = open(argv[arc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	}
+	if (file[0] == -1)
+		return (close(file[1]), 0);
+	if (file[1] == -1)
+		return (close(file[0]), 0);
+	while (argv[++i])
+		if (argv[i][0] == '\0')
+			return (closefd(file), 0);
+	if ((access(argv[1], F_OK) != 0) || (access(argv[1], R_OK) != 0))
 		return (closefd(file), 0);
 	return (1);
 }
@@ -81,7 +84,7 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		find_space(argv[2 + fd.i + fd.here_d])), env);
 		arg = ft_split(argv[2 + fd.i + fd.here_d], ' ');
 		if (!path || !arg)
-			return (free(path), freemtr(arg));
+			return (free(path), freemtr(arg), exit(1));
 		execve(path, arg, env);
 	}
 	else
@@ -101,31 +104,40 @@ void	child_do(t_file fd, int arc, char **argv, char **env)
 	closefd(fd.pipefd);
 	dup2(fd.file[1], 1);
 	close(fd.file[1]);
+	if (fd.here_d == 1)
+		append(fd.plus);
 	path = parse_cmd(ft_substr(argv[arc - 2], 0, \
 	find_space(argv[arc - 2])), env);
 	arg = ft_split(argv[arc - 2], ' ');
 	if (!path || !arg)
-		return (free(path), freemtr(arg));
+		return (free(path), freemtr(arg), exit(1));
 	execve(path, arg, env);
 }
 
 int	main(int arc, char **argv, char **env)
 {
 	t_file	fd;
+	int		w;
 
 	fd.i = -1;
 	fd.here_d = 0;
+	w = 0;
 	if (args_control2(&fd, arc, argv, fd.file) == 0)
 		return (4);
 	dup2(fd.file[0], 0);
 	close(fd.file[0]);
 	if (fd.here_d == 1)
-		unlink("here_doc");
-	while (arc - 4 + fd.here_d >= ++fd.i)
 	{
-		if (pipe(fd.pipefd) == -1)
-			return (3);
-		for_fork(arc, argv, env, fd);
+		unlink("here_doc");
+		fd.plus = get_to_append(fd.file[1]);
+		if (fd.plus == NULL)
+			return (close(fd.file[1]), 1);
 	}
+	if (real_thing(&fd, arc, argv, env) == 0)
+		return (1);
+	while (wait(&w) > 0)
+		;
+	if (fd.here_d == 1)
+		freemtr(fd.plus);
 	return (0);
 }
