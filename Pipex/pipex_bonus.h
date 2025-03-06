@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 13:38:30 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/26 13:39:38 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/03/05 13:11:20 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ char	*parse_cmd(char *argv, char **env);
 void	closefd(int pipefd[2]);
 int		find_space(char *str);
 void	forking(pid_t *pid, int pipefd[2]);
-void	parent(t_file fd, pid_t pid);
 void	freemtr(char **matrix);
 int		here_doc(t_file *fd, char **argv);
 void	for_fork(int arc, char **argv, char **env, t_file fd);
@@ -58,5 +57,6 @@ int		control_str(char *str, char *argv);
 char	**get_to_append(int fd);
 void	append(char **plus);
 int		real_thing(t_file *fd, int arc, char **argv, char **env);
+int		till(char *str);
 
 #endif

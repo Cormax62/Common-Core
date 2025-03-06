@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 14:11:52 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/26 12:12:57 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/03/06 09:14:31 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ char	*parse_cmd(char *argv, char **env)
 	char	**path;
 	char	*temp;
 
-	i = 0;
-	while (env[i])
-	{
+	i = -1;
+	path = NULL;
+	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 			path = ft_split(env[i] + 5, ':');
-		i++;
-	}
-	i = 0;
-	while (path[i])
+	if (!path)
+		return (argv);
+	i = -1;
+	while (path[++i])
 	{
 		temp = ft_strjoin(path[i], "/");
 		command = ft_strjoin(temp, argv);
@@ -35,7 +35,6 @@ char	*parse_cmd(char *argv, char **env)
 		if (access(command, F_OK) == 0)
 			return (free(argv), freemtr(path), command);
 		free(command);
-		i++;
 	}
 	return (free(argv), freemtr(path), NULL);
 }
@@ -53,7 +52,8 @@ int	args_control(int arc, char **argv, int *file)
 		return (closefd(file), 0);
 	while (argv[i])
 	{
-		if (argv[i][0] == '\0')
+		if (argv[i][0] == '\0' || till_word(argv[i]) == (int) \
+		ft_strlen(argv[i]))
 			return (closefd(file), 0);
 		i++;
 	}
@@ -73,12 +73,13 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		dup2(fd.pipefd[1], 1);
 		closefd(fd.pipefd);
 		closefd(fd.file);
-		path = parse_cmd(ft_substr(argv[2 + fd.i], 0, \
+		path = parse_cmd(ft_substr(argv[2 + fd.i], till_word(argv[2 + fd.i]), \
 		find_space(argv[2 + fd.i])), env);
 		arg = ft_split(argv[2 + fd.i], ' ');
-		if (!path || !arg)
-			return (free(path), freemtr(arg), exit(1));
+		if (!path)
+			path = argv[2 + fd.i];
 		execve(path, arg, env);
+		return (freemtr(arg), exit(1));
 	}
 	else
 	{
@@ -96,12 +97,13 @@ void	child_do(t_file fd, int arc, char **argv, char **env)
 	closefd(fd.pipefd);
 	dup2(fd.file[1], 1);
 	close(fd.file[1]);
-	path = parse_cmd(ft_substr(argv[arc - 2], 0, \
+	path = parse_cmd(ft_substr(argv[arc - 2], till_word(argv[arc - 2]), \
 	find_space(argv[arc - 2])), env);
 	arg = ft_split(argv[arc - 2], ' ');
-	if (!path || !arg)
-		return (free(path), freemtr(arg), exit(1));
+	if (!path)
+		path = argv[arc - 2];
 	execve(path, arg, env);
+	return (freemtr(arg), exit(1));
 }
 
 int	main(int arc, char **argv, char **env)

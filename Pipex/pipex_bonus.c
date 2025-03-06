@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:20:34 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/26 13:40:43 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/03/05 13:14:49 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ char	*parse_cmd(char *argv, char **env)
 	char	**path;
 	char	*temp;
 
-	i = 0;
-	while (env[i])
-	{
+	i = -1;
+	path = NULL;
+	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 			path = ft_split(env[i] + 5, ':');
-		i++;
-	}
-	i = 0;
-	while (path[i])
+	if (!path)
+		return (argv);
+	i = -1;
+	while (path[++i])
 	{
 		temp = ft_strjoin(path[i], "/");
 		command = ft_strjoin(temp, argv);
@@ -35,10 +35,8 @@ char	*parse_cmd(char *argv, char **env)
 		if (access(command, F_OK) == 0)
 			return (free(argv), freemtr(path), command);
 		free(command);
-		i++;
 	}
-	freemtr(path);
-	return (free(argv), NULL);
+	return (free(argv), freemtr(path), NULL);
 }
 
 int	args_control2(t_file *fd, int arc, char **argv, int *file)
@@ -63,7 +61,7 @@ int	args_control2(t_file *fd, int arc, char **argv, int *file)
 	if (file[1] == -1)
 		return (close(file[0]), 0);
 	while (argv[++i])
-		if (argv[i][0] == '\0')
+		if (argv[i][0] == '\0' || till(argv[i]) == (int) ft_strlen(argv[i]))
 			return (closefd(file), 0);
 	if ((access(argv[1], F_OK) != 0) || (access(argv[1], R_OK) != 0))
 		return (closefd(file), 0);
@@ -80,12 +78,13 @@ void	child(pid_t pid, char **argv, char **env, t_file fd)
 		dup2(fd.pipefd[1], 1);
 		closefd(fd.pipefd);
 		closefd(fd.file);
-		path = parse_cmd(ft_substr(argv[2 + fd.i + fd.here_d], 0, \
-		find_space(argv[2 + fd.i + fd.here_d])), env);
+		path = parse_cmd(ft_substr(argv[2 + fd.i + fd.here_d], till(\
+		argv[2 + fd.i]), find_space(argv[2 + fd.i + fd.here_d])), env);
 		arg = ft_split(argv[2 + fd.i + fd.here_d], ' ');
-		if (!path || !arg)
-			return (free(path), freemtr(arg), exit(1));
+		if (!path)
+			path = argv[2 + fd.i];
 		execve(path, arg, env);
+		return (freemtr(arg), exit(1));
 	}
 	else
 	{
@@ -106,12 +105,13 @@ void	child_do(t_file fd, int arc, char **argv, char **env)
 	close(fd.file[1]);
 	if (fd.here_d == 1)
 		append(fd.plus);
-	path = parse_cmd(ft_substr(argv[arc - 2], 0, \
+	path = parse_cmd(ft_substr(argv[arc - 2], till(argv[arc - 2]), \
 	find_space(argv[arc - 2])), env);
 	arg = ft_split(argv[arc - 2], ' ');
-	if (!path || !arg)
-		return (free(path), freemtr(arg), exit(1));
+	if (!path)
+		path = argv[arc - 2];
 	execve(path, arg, env);
+	return (freemtr(arg), exit(1));
 }
 
 int	main(int arc, char **argv, char **env)

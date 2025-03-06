@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:25:26 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/02/25 16:05:24 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/03/05 10:19:25 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,20 @@ void	closefd(int pipefd[2])
 int	find_space(char *str)
 {
 	int	i;
+	int	n;
 
 	i = 0;
+	n = 0;
+	while (str[i] == ' ')
+		i++;
 	while (str[i])
 	{
 		if (str[i] == ' ')
-			return (i);
-		i ++ ;
+			return (n);
+		i++;
+		n++;
 	}
-	if (str[i] == ' ')
-		return (i);
-	return (ft_strlen(str));
+	return (n);
 }
 
 void	forking(pid_t *pid, int pipefd[2])
