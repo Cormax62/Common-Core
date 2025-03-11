@@ -23,11 +23,13 @@ int	here_doc(t_file *fd, char **argv)
 	fil = open("here_doc", O_RDWR | O_CREAT | O_TRUNC, 0777);
 	if (fil == -1)
 		return (fil);
+	write(1, "pipe heredoc> ", 15);
 	str = get_next_line(0);
 	while (control_str(str, argv[2]) == 0)
 	{
 		ft_putstr_fd(str, fil);
 		free(str);
+		write(1, "pipe heredoc> ", 15);
 		str = get_next_line(0);
 	}
 	free(str);
