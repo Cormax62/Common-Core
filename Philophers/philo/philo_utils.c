@@ -1,0 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/05/23 12:14:07 by mbiagi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+static long	ft_number_long(const char *c, int x, int sign)
+{
+	long	num;
+
+	num = 0;
+	while ((c[x] >= 48) && (c[x] <= 57))
+	{
+		num = num * 10 + (c[x] - '0');
+		x++;
+	}
+	if (sign == 1)
+		return (num * -1);
+	return (num);
+}
+
+long	ft_atol(const char *nptr)
+{
+	int	x;
+	int	sign;
+
+	x = 0;
+	sign = 0;
+	while ((nptr[x] == 32) || ((nptr[x] >= 9) && (nptr[x] <= 13)))
+		x++;
+	if (nptr[x] == 43)
+		x++;
+	else if (nptr[x] == 45)
+	{
+		sign = 1;
+		x++;
+	}
+	else if ((nptr[x] < 48) || (nptr[x] > 57))
+		return (0);
+	return (ft_number_long(nptr, x, sign));
+}
+
+long	getcorrecttime(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return ((long)((tv.tv_sec * 1e9) + (tv.tv_usec * 1e3)));
+}
