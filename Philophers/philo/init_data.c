@@ -59,8 +59,10 @@ void	init_philo(t_table *table)
 		philo = table->philo + i;
 		philo->id = i + 1;
 		philo->meal_counter = 0;
+		philo->last_dinner_time = 0:
 		philo->full = false;
 		philo->table = table;
+		mutex_handle(philo->philo_mutex, INIT);
 		assign_fork(table , i);
 		i++;
 	}
@@ -71,7 +73,9 @@ void	init_table(t_table *table, int arc, char **argv)
 	int	i;
 
 	i = -1;
+	table->running_threads = 0;
 	table->end_program = false;
+	table->syncronized = false;
 	table->fork = malloc(table->n_philo * (sizeof(t_fork)));
 	if (table->fork == NULL)
 		return (printf("MALLOC HAS...FAILED?!"), exit (1));
@@ -81,6 +85,8 @@ void	init_table(t_table *table, int arc, char **argv)
 			return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
 		table->fork[i].fork_id = i;
 	}
+	if (mutex_handle(&table->table_mutex, INIT) != 0)
+		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
 	table->philo = malloc(table->n_philo * (sizeof(t_philo)));
 	if (table->philo == NULL)
 		return (free(table->fork), printf("MALLOC HAS...FAILED?!"), exit (1));

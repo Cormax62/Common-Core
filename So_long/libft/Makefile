@@ -43,7 +43,7 @@ bonus: $(OBJ) $(BONUSOBJ)
 	$(AR) $(NAME) $(OBJ) $(BONUSOBJ)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -g -c $^ -o $@
 
 clean:
 	rm -f $(OBJ) $(BONUSOBJ)

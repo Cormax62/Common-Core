@@ -12,9 +12,66 @@
 
 #include "philo.h"
 
+void	*socrates(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo)data;
+	while(!get_bool(philo->table->table_mutex, philo->table->syncronized))
+		;
+	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
+	write_status(FORK, philo);
+	while (!get_bool(&table->table_mutex, table->end_program))
+		usleep(200);
+	return (NULL);
+}
+
+void	*referee(void *data)
+{
+	int		i;
+	t_table	*table;
+	long	r_threads;
+
+	i = -1;
+	table = (t_table)data;
+	while (!all_threads_running(table))
+		;
+	while (!get_bool(&table->table_mutex, table->end_program))
+	{
+		while (++i < table->n_philo && !get_bool(&table->table_mutex, /
+		table->end_program))
+		{
+			if (suicide(table->philo + i))
+			{
+				set_bool(&table->table_mutex, &table->end_program, true);
+				write_status(DIED, table->philo + i);
+			}
+		}
+	}
+	return (NULL);
+}
+
 void	*simulation(void *data)
 {
-	
+	t_philo	*philo;
+
+	philo = (t_philo)data;
+	while(!get_bool(philo->table->table_mutex, philo->table->syncronized))
+		;
+	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
+	set_long(&philo->table->table_mutex, philo->table->running_threads, /
+	philo->table->running_threads + 1;)
+	desyncronized(philo);
+	while(!get_bool(philo->table->table_mutex, philo->table->end_program))
+	{
+		if (philo->full) // FORSE AVRA' LEAK, DA CONTROLLARE A PROGRAMMA FINITO
+			break ;
+		eating(philo);
+		write_status(SLEEPING, philo);
+		sleeping(philo->table->t_sleep, philo->table);
+		thinking();
+	}
+	return (NULL);
 }
 
 void	start_meal(t_table *table)
@@ -25,14 +82,18 @@ void	start_meal(t_table *table)
 	if (table->max_dinner == 0)
 		return ;
 	else if (table->n_philo == 1)
-		return ; //TODO
+		pthread_create(&table->philo[0], NULL, socrate(), &table->philo[0])
 	else
 		while (++i != table->n_philo)
 			init_thread(&table->philo[i], CREATE);
+	pthread_create(&table->monitor, NULL, referee, table)
 	table->start_program = getcorrecttime();
+	set_bool(*table->table_mutex, table->syncronized, true);
 	i = -1;
 	while (++i != table->n_philo)
 		init_thread(&table->philo[i], JOIN);
+	set_bool(&table->table_mutex, &table->end_program, true);
+	init_thread(&table->monitor, JOIN);
 }
 
 int	main(int arc, char **argv)
@@ -54,5 +115,6 @@ int	main(int arc, char **argv)
 	init_table(&table, arc ,argv);
 	init_philo(&table);
 	start_meal(&table);
+	clear(&table);
 	return (0);
 }

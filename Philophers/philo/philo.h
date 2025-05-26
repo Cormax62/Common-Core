@@ -43,6 +43,15 @@ enum t_comm
 	DETACH
 };
 
+enum t_action
+{
+	SLEEPING,
+	EATING,
+	THINKING,
+	FORK,
+	DIED
+};
+
 typedef struct s_table t_table;
 
 typedef struct s_fork
@@ -53,26 +62,33 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	int			id;
-	long		meal_counter;
-	t_fork		*lft_fork;
-	t_fork		*rgt_fork;
-	bool		full;
-	pthread_t	thread_id;
-	t_table		*table;
+	int				id;
+	long			last_dinner_time;
+	long			meal_counter;
+	t_fork			*lft_fork;
+	t_fork			*rgt_fork;
+	bool			full;
+	pthread_t		thread_id;
+	pthread_mutex_t	philo_mutex;
+	t_table			*table;
 }	t_philo;
 
 typedef struct s_table
 {
-	int		n_philo;
-	long	t_death;
-	long	t_eat;
-	long	t_sleep;
-	long	max_dinner;
-	long	start_program;
-	bool	end_program;
-	t_fork	*fork;
-	t_philo	*philo;
+	int				n_philo;
+	long			t_death;
+	long			t_eat;
+	long			t_sleep;
+	long			max_dinner;
+	long			start_program;
+	long			running_threads;
+	bool			syncronized;
+	bool			end_program;
+	pthread_t		monitor;
+	pthread_mutex_t	write_mutex;
+	pthread_mutex_t	table_mutex;
+	t_fork			*fork;
+	t_philo			*philo;
 }	t_table;
 
 int		parsing(char **argv);
@@ -84,6 +100,19 @@ void	init_table(t_table *table, int arc, char **argv);
 void	init_philo(t_table *table);
 int		init_thread(t_philo *philo, int command);
 long	getcorrecttime(void);
+int		mutex_handle(pthread_mutex_t *fork, int command);
 void	*simulation(void *data);
+void    set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
+bool    get_bool(pthread_mutex_t *mutex, bool *value);
+void    set_long(pthread_mutex_t *mutex, long *dest, long value);
+long    get_long(pthread_mutex_t *mutex, long *value);
+void	write_status(int action, t_philo *philo);
+void    sleeping(long time, t_table *table);
+void    eating(t_philo *philo);
+void    thinking(t_philo *philo);
+bool	all_threads_running(t_table *table);
+bool    suicide(t_philo *philo);
+void    clear(t_table *table);
+void    desyncronized(t_philo *philo);
 
 #endif

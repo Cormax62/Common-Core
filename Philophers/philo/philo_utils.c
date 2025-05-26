@@ -12,6 +12,39 @@
 
 #include "philo.h"
 
+bool	all_threads_running(t_table *table) //sium
+{
+	bool	temp;
+
+	temp = false;
+	mutex_handle(&table->table_mutex, LOCK);
+	if (table->running_threads == table->n_philo)
+		temp = true;
+	mutex_handle(&table->table_mutex, UNLOCK);
+	return (temp);
+}
+
+void	write_status(int action, t_philo *philo)
+{
+	long	time;
+
+	if (philo->full)
+		return ;
+	time = (getcorrecttime() - philo->table->start_program) / 1e3;
+	mutex_handle(philo->table->write_mutex, LOCK);
+	if (action == FORK && get_bool(philo->table->end_program) == false)
+		printf("%-6ld the philosopher %d has taken a fork", time, philo->id);
+	else if (action == THINKING && get_bool(philo->table->end_program) == false)
+		printf("%-6ld the philosopher %d is thinking", time, philo->id);
+	else if (action == EATING && get_bool(philo->table->end_program) == false)
+		printf("%-6ld the philosopher %d is eating", time, philo->id);
+	else if (action == SLEEPING && get_bool(philo->table->end_program) == false)
+		printf("%-6ld the philosopher %d is sleeping", time, philo->id);
+	else if (action == DIED)
+		printf("%-6ld the philosopher %d has died", time, philo->id);
+	mutex_handle(&philo->table->write_mutex, UNLOCK);
+}
+
 static long	ft_number_long(const char *c, int x, int sign)
 {
 	long	num;

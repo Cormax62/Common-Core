@@ -12,6 +12,8 @@
 
 #include "so_long.h"
 
+//sed -i 's/\r$//' maps/map.ber
+
 void	print_map3(t_imma *imma, int i, int j)
 {
 	char	*nmoves;
