@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:32:08 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 13:47:42 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:05:39 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_philo
 	long			last_dinner_time;
 	long			meal_counter;
 	t_fork			*lft_fork;
-	t_fork			*rgt_fork;
+	t_fork			rgt_fork;
 	bool			full;
 	pthread_t		thread_id;
 	pthread_mutex_t	philo_mutex;
@@ -98,7 +98,7 @@ int		max_check(char **argv);
 int		valid_time(char **argv);
 void	init_table(t_table *table);
 void	init_philo(t_table *table);
-int		init_thread(t_philo *philo, int command);
+int		init_thread(pthread_t *thread, int command, t_philo *philo);
 long	getcorrecttime(void);
 int		mutex_handle(pthread_mutex_t *fork, int command);
 void	*simulation(void *data);

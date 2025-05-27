@@ -6,20 +6,20 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 09:37:12 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 13:48:28 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 15:22:28 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_thread(t_philo *philo, int command)
+int	init_thread(pthread_t *thread, int command, t_philo *philo)
 {
 	if (command == CREATE)
-		return (pthread_create(&philo->thread_id, NULL, simulation, &philo));
+		return (pthread_create(thread, NULL, simulation, philo));
 	else if (command == JOIN)
-		return (pthread_join(philo->thread_id, NULL));
+		return (pthread_join(*thread, NULL));
 	else if (command == DETACH)
-		return (pthread_detach(philo->thread_id));
+		return (pthread_detach(*thread));
 	return (53550);
 }
 
@@ -41,11 +41,11 @@ static void	assign_fork(t_table *table, int pos)
 	if (pos % 2 == 0)
 	{
 		table->philo->lft_fork = &table->fork[pos];
-		table->philo->rgt_fork = &table->fork[(pos + 1) % table->n_philo];
+		table->philo->rgt_fork = table->fork[(pos + 1) % table->n_philo];
 	}
 	else
 	{
-		table->philo->rgt_fork = &table->fork[pos];
+		table->philo->rgt_fork = table->fork[pos];
 		table->philo->lft_fork = &table->fork[(pos + 1) % table->n_philo];		
 	}
 }
@@ -88,6 +88,8 @@ void	init_table(t_table *table)
 		table->fork[i].fork_id = i;
 	}
 	if (mutex_handle(&table->table_mutex, INIT) != 0)
+		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
+	if (mutex_handle(&table->write_mutex, INIT) != 0)
 		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
 	table->philo = malloc(table->n_philo * (sizeof(t_philo)));
 	if (table->philo == NULL)

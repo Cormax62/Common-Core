@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 09:04:18 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 13:47:28 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 15:22:59 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void    clear(t_table *table)
     while (++i < table->n_philo)
     {
         philo = table->philo + i;
-        init_thread(philo, DESTROY);
+        init_thread(&philo->thread_id, DESTROY, NULL);
     }
     mutex_handle(&table->write_mutex, DESTROY);
     mutex_handle(&table->table_mutex, DESTROY);
@@ -48,14 +48,12 @@ void    sleeping(long time, t_table *table)
     while ((getcorrecttime() - start) < time)
     {
         if (get_bool(&table->table_mutex, &table->end_program))
-            break;
-        // if ((time - (getcorrecttime() - start)) > 1e3);
-        //     usleep((time - (getcorrecttime() - start)) / 2);
-        // else
-        // {
-        //     while ((getcorrecttime() - start) < time)
-        //         ;
-        // }
+            break ;
+        if ((time - (getcorrecttime() - start)) > 1e3)
+            usleep((time - (getcorrecttime() - start)) / 2);
+        else
+            while ((getcorrecttime() - start) < time)
+                ;
     }
 }
 
@@ -63,7 +61,7 @@ void    eating(t_philo *philo)
 {
     mutex_handle(&philo->lft_fork->fork, LOCK);
     write_status(FORK, philo);
-    mutex_handle(&philo->rgt_fork->fork, LOCK);
+    mutex_handle(&philo->rgt_fork.fork, LOCK);
     write_status(FORK, philo);
     set_long(&philo->philo_mutex, &philo->last_dinner_time, \
         getcorrecttime() / 1e3);
@@ -73,7 +71,7 @@ void    eating(t_philo *philo)
     if (philo->meal_counter == philo->table->max_dinner)
         set_bool(&philo->philo_mutex, &philo->full, true);
     mutex_handle(&philo->lft_fork->fork, UNLOCK);
-    mutex_handle(&philo->rgt_fork->fork, UNLOCK);
+    mutex_handle(&philo->rgt_fork.fork, UNLOCK);
 }
 
 void    thinking(t_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:36:59 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 14:15:21 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 15:26:03 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	*simulation(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	printf("table_mutex = %ld", philo->table->table_mutex);
 	while(!get_bool(&philo->table->table_mutex, &philo->table->syncronized))
 		;
 	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
@@ -87,13 +86,14 @@ void	start_meal(t_table *table)
 			socrate, &table->philo[0]);
 	else
 		while (++i != table->n_philo)
-			init_thread(&table->philo[i], CREATE);
+			init_thread(&table->philo[i].thread_id, CREATE, \
+			&table->philo[i]);
 	set_bool(&table->table_mutex, &table->syncronized, true);
 	pthread_create(&table->monitor, NULL, referee, table);
 	table->start_program = getcorrecttime();
 	i = -1;
 	while (++i != table->n_philo)
-		init_thread(&table->philo[i], JOIN);
+		init_thread(&table->philo[i].thread_id, JOIN, NULL);
 	set_bool(&table->table_mutex, &table->end_program, true);
 	pthread_join(table->monitor, NULL);
 }
