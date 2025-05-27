@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:32:08 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/23 13:49:13 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 13:47:42 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_table t_table;
 typedef struct s_fork
 {
 	pthread_mutex_t	fork;
-	int				*fork_id;
+	int				fork_id;
 }	t_fork;
 
 typedef struct s_philo
@@ -75,7 +75,7 @@ typedef struct s_philo
 
 typedef struct s_table
 {
-	int				n_philo;
+	long			n_philo;
 	long			t_death;
 	long			t_eat;
 	long			t_sleep;
@@ -96,7 +96,7 @@ long	ft_atol(const char *nptr);
 int		is_all_digit(char **argv);
 int		max_check(char **argv);
 int		valid_time(char **argv);
-void	init_table(t_table *table, int arc, char **argv);
+void	init_table(t_table *table);
 void	init_philo(t_table *table);
 int		init_thread(t_philo *philo, int command);
 long	getcorrecttime(void);

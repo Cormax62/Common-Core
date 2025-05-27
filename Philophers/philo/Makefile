@@ -6,7 +6,7 @@
 #    By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 11:35:23 by mbiagi            #+#    #+#              #
-#    Updated: 2025/05/21 09:16:02 by mbiagi           ###   ########.fr        #
+#    Updated: 2025/05/27 09:27:33 by mbiagi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = philo
 LIB = -g -pthread
 
-SRC = main.c philo_parse.c philo_utils.c
+SRC = main.c philo_parse.c philo_utils.c init_data.c getter_setter.c action.c
 
 OBJ = $(SRC:.c=.o)
 

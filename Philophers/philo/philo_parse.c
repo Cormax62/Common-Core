@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 14:33:26 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/21 14:48:23 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 10:10:06 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	valid_time(char **argv)
 	i = 0;
 	while (i != 3 && argv[i])
 	{
-		if (ft_atol(argv[i]) > 60)
+		if (ft_atol(argv[i]) < 60)
 			return (0);
 		i++;
 	}

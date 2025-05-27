@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/23 12:14:07 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 09:38:16 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,18 @@ void	write_status(int action, t_philo *philo)
 	if (philo->full)
 		return ;
 	time = (getcorrecttime() - philo->table->start_program) / 1e3;
-	mutex_handle(philo->table->write_mutex, LOCK);
-	if (action == FORK && get_bool(philo->table->end_program) == false)
+	mutex_handle(&philo->table->write_mutex, LOCK);
+	if (action == FORK && get_bool(&philo->philo_mutex, \
+	&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d has taken a fork", time, philo->id);
-	else if (action == THINKING && get_bool(philo->table->end_program) == false)
+	else if (action == THINKING && get_bool(&philo->philo_mutex, \
+	&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d is thinking", time, philo->id);
-	else if (action == EATING && get_bool(philo->table->end_program) == false)
+	else if (action == EATING && get_bool(&philo->philo_mutex, \
+	&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d is eating", time, philo->id);
-	else if (action == SLEEPING && get_bool(philo->table->end_program) == false)
+	else if (action == SLEEPING && get_bool(&philo->philo_mutex, \
+	&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d is sleeping", time, philo->id);
 	else if (action == DIED)
 		printf("%-6ld the philosopher %d has died", time, philo->id);

@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 09:37:12 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/23 13:59:26 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 13:48:28 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	init_thread(t_philo *philo, int command)
 		return (pthread_join(philo->thread_id, NULL));
 	else if (command == DETACH)
 		return (pthread_detach(philo->thread_id));
+	return (53550);
 }
 
 int	mutex_handle(pthread_mutex_t *fork, int command)
@@ -32,6 +33,7 @@ int	mutex_handle(pthread_mutex_t *fork, int command)
 		return (pthread_mutex_init(fork, NULL));
 	else if (command == DESTROY)
 		return (pthread_mutex_unlock(fork));
+	return (53550);
 }
 
 static void	assign_fork(t_table *table, int pos)
@@ -59,16 +61,16 @@ void	init_philo(t_table *table)
 		philo = table->philo + i;
 		philo->id = i + 1;
 		philo->meal_counter = 0;
-		philo->last_dinner_time = 0:
+		philo->last_dinner_time = 0;
 		philo->full = false;
 		philo->table = table;
-		mutex_handle(philo->philo_mutex, INIT);
+		mutex_handle(&philo->philo_mutex, INIT);
 		assign_fork(table , i);
 		i++;
 	}
 }
 
-void	init_table(t_table *table, int arc, char **argv)
+void	init_table(t_table *table)
 {
 	int	i;
 
