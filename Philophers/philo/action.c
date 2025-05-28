@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 09:04:18 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 15:22:59 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/28 08:23:53 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void    sleeping(long time, t_table *table)
 
 void    eating(t_philo *philo)
 {
-    mutex_handle(&philo->lft_fork->fork, LOCK);
+    mutex_handle(&philo->table->fork[philo->fork[0]], LOCK);
     write_status(FORK, philo);
-    mutex_handle(&philo->rgt_fork.fork, LOCK);
+    mutex_handle(&philo->table->fork[philo->fork[1]], LOCK);
     write_status(FORK, philo);
     set_long(&philo->philo_mutex, &philo->last_dinner_time, \
         getcorrecttime() / 1e3);
@@ -70,8 +70,8 @@ void    eating(t_philo *philo)
     sleeping(philo->table->t_eat, philo->table);
     if (philo->meal_counter == philo->table->max_dinner)
         set_bool(&philo->philo_mutex, &philo->full, true);
-    mutex_handle(&philo->lft_fork->fork, UNLOCK);
-    mutex_handle(&philo->rgt_fork.fork, UNLOCK);
+    mutex_handle(&philo->table->fork[philo->fork[0]], UNLOCK);
+    mutex_handle(&philo->table->fork[philo->fork[1]], UNLOCK);
 }
 
 void    thinking(t_philo *philo)

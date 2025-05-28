@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 09:37:12 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 15:22:28 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/28 08:22:26 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	mutex_handle(pthread_mutex_t *fork, int command)
 	else if (command == INIT)
 		return (pthread_mutex_init(fork, NULL));
 	else if (command == DESTROY)
-		return (pthread_mutex_unlock(fork));
+		return (pthread_mutex_destroy(fork));
 	return (53550);
 }
 
@@ -40,13 +40,13 @@ static void	assign_fork(t_table *table, int pos)
 {
 	if (pos % 2 == 0)
 	{
-		table->philo->lft_fork = &table->fork[pos];
-		table->philo->rgt_fork = table->fork[(pos + 1) % table->n_philo];
+		table->philo->fork[0] = pos - 1;
+		table->philo->fork[1] = (pos) % table->n_philo;
 	}
 	else
 	{
-		table->philo->rgt_fork = table->fork[pos];
-		table->philo->lft_fork = &table->fork[(pos + 1) % table->n_philo];		
+		table->philo->fork[1] = pos - 1;
+		table->philo->fork[0] = (pos) % table->n_philo;		
 	}
 }
 
@@ -78,14 +78,13 @@ void	init_table(t_table *table)
 	table->running_threads = 0;
 	table->end_program = false;
 	table->syncronized = false;
-	table->fork = malloc(table->n_philo * (sizeof(t_fork)));
+	table->fork = malloc(table->n_philo * (sizeof(pthread_mutex_t)));
 	if (table->fork == NULL)
 		return (printf("MALLOC HAS...FAILED?!"), exit (1));
 	while (++i < table->n_philo)
 	{
-		if (mutex_handle(&table->fork[i].fork, INIT) != 0)
+		if (mutex_handle(&table->fork[i], INIT) != 0)
 			return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
-		table->fork[i].fork_id = i;
 	}
 	if (mutex_handle(&table->table_mutex, INIT) != 0)
 		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));

@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:36:59 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 15:26:03 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/28 09:05:17 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	*referee(void *data)
 {
 	int		i;
 	t_table	*table;
-	// long	r_threads;
 
 	i = -1;
 	table = (t_table *)data;
@@ -61,6 +60,7 @@ void	*simulation(void *data)
 	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
 	set_long(&philo->table->table_mutex, &philo->table->running_threads, \
 	philo->table->running_threads + 1);
+	printf("%ld\n", philo->table->running_threads);
 	desyncronized(philo);
 	while(!get_bool(&philo->table->table_mutex, &philo->table->end_program))
 	{
@@ -92,7 +92,7 @@ void	start_meal(t_table *table)
 	pthread_create(&table->monitor, NULL, referee, table);
 	table->start_program = getcorrecttime();
 	i = -1;
-	while (++i != table->n_philo)
+	while (++i < table->n_philo)
 		init_thread(&table->philo[i].thread_id, JOIN, NULL);
 	set_bool(&table->table_mutex, &table->end_program, true);
 	pthread_join(table->monitor, NULL);

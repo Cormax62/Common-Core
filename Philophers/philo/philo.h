@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 11:32:08 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 16:05:39 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/28 09:08:29 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,12 @@ enum t_action
 
 typedef struct s_table t_table;
 
-typedef struct s_fork
-{
-	pthread_mutex_t	fork;
-	int				fork_id;
-}	t_fork;
-
 typedef struct s_philo
 {
 	int				id;
 	long			last_dinner_time;
 	long			meal_counter;
-	t_fork			*lft_fork;
-	t_fork			rgt_fork;
+	long			fork[2];
 	bool			full;
 	pthread_t		thread_id;
 	pthread_mutex_t	philo_mutex;
@@ -87,7 +80,7 @@ typedef struct s_table
 	pthread_t		monitor;
 	pthread_mutex_t	write_mutex;
 	pthread_mutex_t	table_mutex;
-	t_fork			*fork;
+	pthread_mutex_t	*fork;
 	t_philo			*philo;
 }	t_table;
 

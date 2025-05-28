@@ -6,13 +6,13 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 15:03:09 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:20:17 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	all_threads_running(t_table *table) //sium
+bool	all_threads_running(t_table *table)
 {
 	bool	temp;
 
