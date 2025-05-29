@@ -62,8 +62,8 @@ int	valid_time(char **argv)
 
 int	parsing(char **argv)
 {
-	if (is_all_digit(&argv[1]) == 0 || max_check(&argv[1]) == 0 \
-	|| valid_time(&argv[2]) == 0)
+	if (is_all_digit(&argv[1]) == 0 || max_check(&argv[1]) == 0
+		|| valid_time(&argv[2]) == 0)
 		return (0);
 	return (1);
 }

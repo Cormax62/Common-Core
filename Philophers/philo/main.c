@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 11:36:59 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/28 09:05:17 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/05/29 10:27:22 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/05/29 15:14:23 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,11 @@ void	*socrate(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	while(!get_bool(&philo->table->table_mutex, &philo->table->syncronized))
-		;
-	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
+	set_long(&philo->philo_mutex, &philo->last_dinner_time,
+		philo->table->start_program);
 	write_status(FORK, philo);
-	while (!get_bool(&philo->table->table_mutex, &philo->table->end_program))
-		usleep(200);
-	return (NULL);
-}
-
-void	*referee(void *data)
-{
-	int		i;
-	t_table	*table;
-
-	i = -1;
-	table = (t_table *)data;
-	while (!all_threads_running(table))
-		;
-	while (!get_bool(&table->table_mutex, &table->end_program))
-	{
-		while (++i < table->n_philo && !get_bool(&table->table_mutex, \
-		&table->end_program))
-		{
-			if (suicide(table->philo + i))
-			{
-				set_bool(&table->table_mutex, &table->end_program, true);
-				write_status(DIED, table->philo + i);
-			}
-		}
-	}
+	sleeping(philo->table->t_death, philo->table);
+	write_status(DIED, philo);
 	return (NULL);
 }
 
@@ -55,23 +30,23 @@ void	*simulation(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	while(!get_bool(&philo->table->table_mutex, &philo->table->syncronized))
-		;
-	set_long(&philo->philo_mutex, &philo->last_dinner_time, getcorrecttime());
-	set_long(&philo->table->table_mutex, &philo->table->running_threads, \
-	philo->table->running_threads + 1);
-	printf("%ld\n", philo->table->running_threads);
-	desyncronized(philo);
-	while(!get_bool(&philo->table->table_mutex, &philo->table->end_program))
+	set_long(&philo->philo_mutex, &philo->last_dinner_time,
+		philo->table->start_program);
+	desyncronized(philo->table->start_program);
+	if (philo->id % 2)
+		thinking(philo, true);
+	while (!get_bool(&philo->table->table_mutex, &philo->table->end_program))
 	{
-		if (philo->full)
-			break ;
 		eating(philo);
-		write_status(SLEEPING, philo);
-		sleeping(philo->table->t_sleep, philo->table);
-		thinking(philo);
+		thinking(philo, false);
 	}
 	return (NULL);
+}
+
+static void	lonely_philo(t_philo *philo)
+{
+	pthread_create(&philo->thread_id, NULL, socrate, philo);
+	pthread_join(philo->thread_id, NULL);
 }
 
 void	start_meal(t_table *table)
@@ -79,23 +54,20 @@ void	start_meal(t_table *table)
 	int	i;
 
 	i = -1;
+	table->start_program = getcorrecttime();
 	if (table->max_dinner == 0)
 		return ;
 	else if (table->n_philo == 1)
-		pthread_create(&table->philo[0].thread_id, NULL, \
-			socrate, &table->philo[0]);
+		return (lonely_philo(&table->philo[0]));
 	else
 		while (++i != table->n_philo)
-			init_thread(&table->philo[i].thread_id, CREATE, \
-			&table->philo[i]);
-	set_bool(&table->table_mutex, &table->syncronized, true);
+			init_thread(&table->philo[i].thread_id, CREATE, &table->philo[i]);
 	pthread_create(&table->monitor, NULL, referee, table);
-	table->start_program = getcorrecttime();
 	i = -1;
 	while (++i < table->n_philo)
 		init_thread(&table->philo[i].thread_id, JOIN, NULL);
+	init_thread(&table->monitor, JOIN, NULL);
 	set_bool(&table->table_mutex, &table->end_program, true);
-	pthread_join(table->monitor, NULL);
 }
 
 int	main(int arc, char **argv)
@@ -104,7 +76,7 @@ int	main(int arc, char **argv)
 
 	if (arc != 5 && arc != 6)
 		return (printf("WRONG NUMBER OF ARGUMENTS!!\n"), 1);
-	if (parsing(argv) == 0)
+	if (parsing(argv) == 0 || ft_atol(argv[1]) == 0)
 		return (printf("NOT CORRECT ARGUMENT, PLEASE TRY AGAIN!!\n"), 1);
 	table.n_philo = ft_atol(argv[1]);
 	table.t_death = ft_atol(argv[2]) * 1e3;

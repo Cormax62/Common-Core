@@ -6,23 +6,11 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/27 16:20:17 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/29 15:16:27 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-bool	all_threads_running(t_table *table)
-{
-	bool	temp;
-
-	temp = false;
-	mutex_handle(&table->table_mutex, LOCK);
-	if (table->running_threads == table->n_philo)
-		temp = true;
-	mutex_handle(&table->table_mutex, UNLOCK);
-	return (temp);
-}
 
 void	write_status(int action, t_philo *philo)
 {
@@ -30,19 +18,19 @@ void	write_status(int action, t_philo *philo)
 
 	if (philo->full)
 		return ;
-	time = (getcorrecttime() - philo->table->start_program) / 1e3;
+	time = (getcorrecttime() - philo->table->start_program);
 	mutex_handle(&philo->table->write_mutex, LOCK);
 	if (action == FORK && get_bool(&philo->philo_mutex, \
-	&philo->table->end_program) == false)
+		&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d has taken a fork\n", time, philo->id);
 	else if (action == THINKING && get_bool(&philo->philo_mutex, \
-	&philo->table->end_program) == false)
-		printf("%-6ld the philosopher %d is thinking\n", time, philo->id);
+		&philo->table->end_program) == false)
+		printf("%-6ld the philosopher %-2d is thinking\n", time, philo->id);
 	else if (action == EATING && get_bool(&philo->philo_mutex, \
-	&philo->table->end_program) == false)
+		&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d is eating\n", time, philo->id);
 	else if (action == SLEEPING && get_bool(&philo->philo_mutex, \
-	&philo->table->end_program) == false)
+		&philo->table->end_program) == false)
 		printf("%-6ld the philosopher %d is sleeping\n", time, philo->id);
 	else if (action == DIED)
 		printf("%-6ld the philosopher %d has died\n", time, philo->id);
@@ -85,10 +73,25 @@ long	ft_atol(const char *nptr)
 	return (ft_number_long(nptr, x, sign));
 }
 
-long	getcorrecttime(void)
+void	clear(t_table *table)
 {
-	struct timeval tv;
+	t_philo	*philo;
+	int		i;
 
-	gettimeofday(&tv, NULL);
-	return ((long)((tv.tv_sec * 1e9) + (tv.tv_usec * 1e3)));
+	i = -1;
+	while (++i < table->n_philo)
+	{
+		philo = table->philo + i;
+		init_thread(&philo->thread_id, DESTROY, NULL);
+	}
+	mutex_handle(&table->write_mutex, DESTROY);
+	mutex_handle(&table->table_mutex, DESTROY);
+	free(table->fork);
+	free(table->philo);
+}
+
+void	desyncronized(long time)
+{
+	while (getcorrecttime() < time)
+		;
 }

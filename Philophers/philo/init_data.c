@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 09:37:12 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/28 08:22:26 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/29 15:13:34 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,15 @@ int	mutex_handle(pthread_mutex_t *fork, int command)
 	return (53550);
 }
 
-static void	assign_fork(t_table *table, int pos)
+static void	assign_fork(t_philo *philo, int pos)
 {
-	if (pos % 2 == 0)
+	(void)pos;
+	philo->fork[0] = philo->id - 1;
+	philo->fork[1] = (philo->id) % philo->table->n_philo;
+	if (philo->id % 2)
 	{
-		table->philo->fork[0] = pos - 1;
-		table->philo->fork[1] = (pos) % table->n_philo;
-	}
-	else
-	{
-		table->philo->fork[1] = pos - 1;
-		table->philo->fork[0] = (pos) % table->n_philo;		
+		philo->fork[0] = (philo->id) % philo->table->n_philo;
+		philo->fork[1] = philo->id - 1;
 	}
 }
 
@@ -65,7 +63,7 @@ void	init_philo(t_table *table)
 		philo->full = false;
 		philo->table = table;
 		mutex_handle(&philo->philo_mutex, INIT);
-		assign_fork(table , i);
+		assign_fork(&table->philo[i], i);
 		i++;
 	}
 }
@@ -75,22 +73,20 @@ void	init_table(t_table *table)
 	int	i;
 
 	i = -1;
-	table->running_threads = 0;
 	table->end_program = false;
-	table->syncronized = false;
 	table->fork = malloc(table->n_philo * (sizeof(pthread_mutex_t)));
 	if (table->fork == NULL)
-		return (printf("MALLOC HAS...FAILED?!"), exit (1));
+		return (printf("MALLOC HAS...FAILED?!"), exit(1));
 	while (++i < table->n_philo)
 	{
 		if (mutex_handle(&table->fork[i], INIT) != 0)
-			return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
+			return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
 	}
 	if (mutex_handle(&table->table_mutex, INIT) != 0)
-		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
+		return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
 	if (mutex_handle(&table->write_mutex, INIT) != 0)
-		return (free(table->fork), printf("SOMETHING FAILED"), exit (1));
+		return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
 	table->philo = malloc(table->n_philo * (sizeof(t_philo)));
 	if (table->philo == NULL)
-		return (free(table->fork), printf("MALLOC HAS...FAILED?!"), exit (1));
+		return (free(table->fork), printf("MALLOC HAS...FAILED?!"), exit(1));
 }
