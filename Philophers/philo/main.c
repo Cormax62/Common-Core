@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:27:22 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/30 08:49:27 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/30 11:31:40 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	*simulation(void *data)
 	set_long(&philo->philo_mutex, &philo->last_dinner_time,
 		philo->table->start_program);
 	desyncronized(philo->table->start_program);
-	if (philo->id % 2)
+	if (philo->id % 2 == 0)
 		thinking(philo, true);
 	while (!get_bool(&philo->table->table_mutex, &philo->table->end_program))
 	{
