@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:27:22 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/29 15:14:23 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/05/30 08:49:27 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ void	*socrate(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
+	mutex_handle(&philo->table->fork[philo->fork[0]], LOCK);
 	set_long(&philo->philo_mutex, &philo->last_dinner_time,
 		philo->table->start_program);
 	write_status(FORK, philo);
 	sleeping(philo->table->t_death, philo->table);
 	write_status(DIED, philo);
+	mutex_handle(&philo->table->fork[philo->fork[0]], UNLOCK);
 	return (NULL);
 }
 
