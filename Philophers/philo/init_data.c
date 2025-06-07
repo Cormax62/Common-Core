@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 09:37:12 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/29 15:13:34 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/06/07 16:02:49 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,17 @@ void	init_table(t_table *table)
 	table->end_program = false;
 	table->fork = malloc(table->n_philo * (sizeof(pthread_mutex_t)));
 	if (table->fork == NULL)
-		return (printf("MALLOC HAS...FAILED?!"), exit(1));
+		return ;
 	while (++i < table->n_philo)
 	{
 		if (mutex_handle(&table->fork[i], INIT) != 0)
-			return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
+			return (free(table->fork));
 	}
 	if (mutex_handle(&table->table_mutex, INIT) != 0)
-		return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
+		return (free(table->fork));
 	if (mutex_handle(&table->write_mutex, INIT) != 0)
-		return (free(table->fork), printf("SOMETHING FAILED"), exit(1));
+		return (free(table->fork));
 	table->philo = malloc(table->n_philo * (sizeof(t_philo)));
 	if (table->philo == NULL)
-		return (free(table->fork), printf("MALLOC HAS...FAILED?!"), exit(1));
+		return (free(table->fork));
 }

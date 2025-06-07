@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/30 09:26:08 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/06/07 16:10:05 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	write_status(int action, t_philo *philo)
 		&philo->table->end_program) == false)
 		printf("%-6ld %-2d is sleeping\n", time, philo->id);
 	else if (action == DIED)
-		printf("%-6ld %-2d has died\n", time, philo->id);
+		printf("%-6ld %-2d died\n", time, philo->id);
 	mutex_handle(&philo->table->write_mutex, UNLOCK);
 }
 
