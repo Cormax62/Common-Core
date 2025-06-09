@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:27:22 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/05/30 11:31:40 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/06/09 08:37:42 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	*simulation(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
-	set_long(&philo->philo_mutex, &philo->last_dinner_time,
-		philo->table->start_program);
 	desyncronized(philo->table->start_program);
 	if (philo->id % 2 == 0)
 		thinking(philo, true);
@@ -62,8 +60,13 @@ void	start_meal(t_table *table)
 	else if (table->n_philo == 1)
 		return (lonely_philo(&table->philo[0]));
 	else
+	{
 		while (++i != table->n_philo)
+		{
+			table->philo[i].last_dinner_time = table->start_program;
 			init_thread(&table->philo[i].thread_id, CREATE, &table->philo[i]);
+		}
+	}
 	pthread_create(&table->monitor, NULL, referee, table);
 	i = -1;
 	while (++i < table->n_philo)
