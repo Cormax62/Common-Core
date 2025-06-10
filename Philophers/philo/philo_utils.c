@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/06/07 16:10:05 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/06/10 11:15:19 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,56 @@ void	write_status(int action, t_philo *philo)
 
 	if (philo->full)
 		return ;
-	time = (getcorrecttime() - philo->table->start_program);
 	mutex_handle(&philo->table->write_mutex, LOCK);
-	if (action == FORK && get_bool(&philo->philo_mutex, \
-		&philo->table->end_program) == false)
+	if (philo->table->end_program)
+		return ((void)mutex_handle(&philo->table->write_mutex, UNLOCK));
+	time = (getcorrecttime() - philo->table->start_program);
+	if (action == FORK)
 		printf("%-6ld %-2d has taken a fork\n", time, philo->id);
-	else if (action == THINKING && get_bool(&philo->philo_mutex, \
-		&philo->table->end_program) == false)
+	else if (action == THINKING)
 		printf("%-6ld %-2d is thinking\n", time, philo->id);
-	else if (action == EATING && get_bool(&philo->philo_mutex, \
-		&philo->table->end_program) == false)
+	else if (action == EATING)
 		printf("%-6ld %-2d is eating\n", time, philo->id);
-	else if (action == SLEEPING && get_bool(&philo->philo_mutex, \
-		&philo->table->end_program) == false)
+	else if (action == SLEEPING)
 		printf("%-6ld %-2d is sleeping\n", time, philo->id);
 	else if (action == DIED)
 		printf("%-6ld %-2d died\n", time, philo->id);
 	mutex_handle(&philo->table->write_mutex, UNLOCK);
 }
+/* 
+static void	print_status(t_philo *philo, char *str)
+{
+	printf("%ld %d %s\n", getcorrecttime() - philo->table->start_program,
+		philo->id + 1, str);
+}
+
+void	write_status(int action, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->table->write_mutex);
+	if (get_bool(&philo->philo_mutex, \
+		&philo->table->end_program))
+	{
+		pthread_mutex_unlock(&philo->table->write_mutex);
+		return ;
+	}
+	// if (DEBUG_FORMATTING == true)
+	// {
+	// 	write_status_debug(philo, action);
+	// 	pthread_mutex_unlock(&philo->table->write_mutex);
+	// 	return ;
+	// }
+	if (action == DIED)
+		print_status(philo, "died");
+	else if (action == EATING)
+		print_status(philo, "is eating");
+	else if (action == SLEEPING)
+		print_status(philo, "is sleeping");
+	else if (action == THINKING)
+		print_status(philo, "is thinking");
+	else if (action == FORK)
+		print_status(philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->table->write_mutex);
+} */
 
 static long	ft_number_long(const char *c, int x, int sign)
 {
