@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 09:44:31 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/06/10 11:15:19 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/06/11 08:29:25 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	write_status(int action, t_philo *philo)
 	if (philo->full)
 		return ;
 	mutex_handle(&philo->table->write_mutex, LOCK);
-	if (philo->table->end_program)
+	if (get_bool(&philo->table->table_mutex, &philo->table->end_program))
 		return ((void)mutex_handle(&philo->table->write_mutex, UNLOCK));
 	time = (getcorrecttime() - philo->table->start_program);
 	if (action == FORK)
