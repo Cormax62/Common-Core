@@ -1,0 +1,29 @@
+{
+    RL readline leaks
+    Memcheck:Leak
+    ...
+    fun:mlx_mouse_hide
+}
+
+# IGNORE OTHER EXECUTABLES' LEAKS
+{
+   MALLOC IN /usr/lib/x86_64-linux-gnu/*
+   Memcheck:Leak
+   fun:malloc
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/*
+}
+{
+   CALLOC IN /usr/lib/x86_64-linux-gnu/*
+   Memcheck:Leak
+   fun:calloc
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/*
+}
+{
+   REALLOC IN /usr/lib/x86_64-linux-gnu/*
+   Memcheck:Leak
+   fun:realloc
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/*
+}
