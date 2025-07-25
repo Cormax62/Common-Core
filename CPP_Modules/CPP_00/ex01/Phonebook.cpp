@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 12:10:59 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/07/17 16:35:59 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/07/21 10:07:54 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,32 @@ int	HasAlpha(std::string str)
 int Phonebook::search()
 {
 	std::string str;
+	int			i = 0;
 	int			n;
 
 	std::cout<<"Which contact are looking for?"<<std::endl;
+	str = contacts[i].GetFirstName();
+	while (str.empty() == 0)
+	{
+		std::cout<<std::right<<std::setw(10)<<i + 1<<"|";
+		std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[i].GetFirstName())<<"|";
+		std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[i].GetLastName())<<"|";
+		std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[i].GetNickName())<<"|"<<std::endl;
+		i++;
+		if (i == 8)
+			break;
+		str = contacts[i].GetFirstName();
+	}
 	std::getline(std::cin, str);
 	n = std::atoi(str.c_str());
 	if (n > this->n || n <= 0)
 		return (std::cout<<"WRONG INDEX MATE"<<std::endl, 1);
-	std::cout<<std::right<<std::setw(10)<<n - 1<<"|";
-	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetFirstName())<<"|";
-	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetLastName())<<"|";
-	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetNickName())<<"|"<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<n<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetFirstName())<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetLastName())<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetNickName())<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetPhoneNumber())<<std::endl;
+	std::cout<<std::right<<std::setw(10)<<CheckLenght(contacts[n - 1].GetDarckestSecret())<<std::endl;
 	return (0);
 }
 
