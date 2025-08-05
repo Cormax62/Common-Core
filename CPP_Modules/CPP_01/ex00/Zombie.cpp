@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:43:33 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/07/22 14:22:37 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/08/05 12:39:25 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Zombie::~Zombie()
 	return;
 }
 
-void Zombie::announce()
+void Zombie::announce() const
 {
 	std::cout<<name<<": BraiiiiiiinnnzzzZ..."<<std::endl;
 }

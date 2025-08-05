@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.hpp                                         :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:08:53 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/08/05 12:39:14 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/08/05 10:55:55 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/08/05 11:43:32 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ZOMBIE_HPP
-# define ZOMBIE_HPP
+#include "./Harl.hpp"
 
-# include "Zombie.h"
-
-class Zombie
+int	main(void)
 {
-private:
-	std::string	name;
-public:
-	Zombie(std::string	name);
-	~Zombie();
+	Harl		karen;
+	std::string	str;
 
-	void announce() const;
-};
-
-#endif
+	while (std::getline(std::cin, str))
+	{
+		if (str == "finish")
+			return(0);
+		karen.complain(str);
+	}
+	return(0);
+}

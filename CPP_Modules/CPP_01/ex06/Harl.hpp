@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.hpp                                         :+:      :+:    :+:   */
+/*   Harl.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:08:53 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/08/05 12:39:14 by mbiagi           ###   ########.fr       */
+/*   Created: 2025/08/05 09:56:58 by mbiagi            #+#    #+#             */
+/*   Updated: 2025/08/05 11:43:39 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ZOMBIE_HPP
-# define ZOMBIE_HPP
+#ifndef HARL_HPP
+# define HARL_HPP
 
-# include "Zombie.h"
+# include <iostream>
+# include <string>
 
-class Zombie
+class Harl
 {
 private:
-	std::string	name;
+	void	debug( void );
+	void	info( void );
+	void	warning( void );
+	void	error( void );
 public:
-	Zombie(std::string	name);
-	~Zombie();
+	Harl();
+	~Harl();
 
-	void announce() const;
+	void	complain( std::string level );
 };
 
 #endif
