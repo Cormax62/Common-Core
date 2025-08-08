@@ -6,12 +6,12 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:30:59 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/08/08 11:34:20 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/08/08 13:59:55 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./Fixed.hpp"
-#include "./Point.hpp"
+#include "Fixed.hpp"
+#include "Point.hpp"
 
 int main( void )
 {
