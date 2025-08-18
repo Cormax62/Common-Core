@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:28:55 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/08/08 11:27:40 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/08/18 11:05:16 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,12 @@ Point::Point(): x(0), y(0)
 {
 }
 
-Point::Point(const Point &other)
+Point::Point(const Point &other): x(other.x), y(other.y)
 {
-	*this = other;
 }
 
-Point::Point(const float x, const float y)
+Point::Point(const float x, const float y): x(x), y(y)
 {
-	this->x.setRawBits(x * (1 << this->bits));
-	this->y.setRawBits(y * (1 << this->bits));
 }
 
 Point::~Point()
@@ -39,8 +36,7 @@ const Point& Point::operator=(const Point &other)
 {
 	if (this != &other)
 	{
-		this->x = other.x;
-		this->y = other.y;
+		return (*this);
 	}
 	return (*this);
 }

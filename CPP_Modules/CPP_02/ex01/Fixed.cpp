@@ -6,7 +6,7 @@
 /*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:30:33 by mbiagi            #+#    #+#             */
-/*   Updated: 2025/08/07 12:19:03 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/08/18 11:32:17 by mbiagi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ float	Fixed::toFloat(void) const
 {
 	float	ret = value >> bits;
 
-	ret += (value % (int)std::pow(2, bits)) * (1.0 / (1 << bits));
+	ret += (value % (1 * (1 << bits)) * (1.0 / (1 << bits)));
 	return(ret);
 }
 
