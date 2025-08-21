@@ -1,0 +1,20 @@
+#ifndef DOG_HPP
+# define DOG_HPP
+
+# include <iostream>
+# include "Animal.hpp"
+
+class Dog: public Animal
+{
+private:
+    
+public:
+    Dog();
+    Dog(const Dog &other);
+    ~Dog();
+
+    const Dog &operator=(const Dog &other);
+    void virtual    makeSound() const;
+};
+
+#endif
