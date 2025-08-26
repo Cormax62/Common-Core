@@ -4,7 +4,7 @@
 
 WrongCat::WrongCat(): WrongAnimal()
 {
-    type = "cat";
+    type = "Cat";
     std::cout<<"WrongCat constructor called"<<std::endl;
 }
 

@@ -5,7 +5,7 @@
 Dog::Dog(): Animal()
 {
     brain = new Brain;
-    type = "dog";
+    type = "Dog";
     std::cout<<"Dog constructor called"<<std::endl;
 }
 

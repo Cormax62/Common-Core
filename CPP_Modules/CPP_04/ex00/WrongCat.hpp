@@ -14,7 +14,7 @@ public:
     ~WrongCat();
 
     const WrongCat &operator=(const WrongCat &other);
-    void virtual    makeSound() const;
+    void            makeSound() const;
 };
 
 #endif
