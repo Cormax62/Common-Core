@@ -10,7 +10,7 @@ protected:
 public:
     WrongAnimal();
     WrongAnimal(const WrongAnimal &other);
-    ~WrongAnimal();
+    virtual ~WrongAnimal();
 
     const WrongAnimal &operator=(const WrongAnimal &other);
     

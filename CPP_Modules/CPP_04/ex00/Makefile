@@ -2,7 +2,7 @@
 NAME =	test
 
 # SRCS
-SRC =  main.cpp Animal.cpp Dog.cpp Cat.cpp
+SRC =  main.cpp Animal.cpp Dog.cpp Cat.cpp WrongAnimal.cpp WrongCat.cpp
 
 CC = c++
 RM = rm -rf
