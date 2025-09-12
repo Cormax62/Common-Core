@@ -3,14 +3,33 @@
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
+#include "Intern.hpp"
 
 int main(void)
 {
 	Bureaucrat	gino("gino", 146);
 	Bureaucrat	luigi("luigi", 1);
-	AForm *doc1 = new ShrubberyCreationForm("pio");
-	AForm *doc2 = new RobotomyRequestForm("sio");
-	AForm *doc3 = new PresidentialPardonForm("tio");
+	Intern		mario;
+	AForm *doc1 = mario.makeForm("robotomy request", "tio");
+	AForm *doc2 = mario.makeForm("shrubbery creation", "sio");
+	AForm *doc3 = mario.makeForm("presidential pardon", "vio");
+	AForm *doc4;
+	try
+	{
+		doc4 = mario.makeForm("robotomy form", "tio");
+	}
+	catch(const Intern::BadName& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	try
+	{
+		doc4 = mario.makeForm("urlo del siummmm", "tio");
+	}
+	catch(const Intern::BadName& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 	try
 	{
 		Bureaucrat	mimmo("mimmo", 151);
