@@ -18,7 +18,7 @@ all: $(NAME)
 
 clean: 
 	@echo "Cleaning object_files..."
-	@$(RM) $(OBJ)
+	@$(RM) $(OBJ) *_shrubbery
 
 fclean: clean
 	@echo "Cleaning executable"

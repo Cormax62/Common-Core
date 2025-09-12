@@ -69,7 +69,7 @@ void Bureaucrat::decrementGrade()
 }
 
 
-void Bureaucrat::signForm(Form doc)
+void Bureaucrat::signForm(Form &doc)
 {
 	doc.beSigned(*this);
 	if (doc.getSign() == true)

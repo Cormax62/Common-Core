@@ -35,5 +35,5 @@ void RobotomyRequestForm::execute(const Bureaucrat& executor) const
 	else if (executor.GetGrade() > this->getForSigned())
 		throw RobotomyRequestForm::GradeTooLowException();
 	else
-		std::cout<<this->target<<" has beet robotomized succesfully 50% of the time.";
+		std::cout<<this->target<<" has beet robotomized succesfully 50% of the time."<<std::endl;
 }

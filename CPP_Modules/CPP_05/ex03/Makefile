@@ -22,7 +22,7 @@ clean:
 
 fclean: clean
 	@echo "Cleaning executable"
-	@$(RM) $(NAME) $(BONUS)
+	@$(RM) $(NAME) $(BONUS) *_shrubbery
 
 re: fclean all
 

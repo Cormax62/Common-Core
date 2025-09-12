@@ -24,7 +24,13 @@ Form::~Form()
 {
 }
 
-// --------------- OPERATOR ---------------
+// --------------- OPERATORS ---------------
+
+std::ostream& operator<<(std::ostream &os, const Form obj)
+{
+	os<<obj.getForExecute()<<" and "<<obj.getForSigned()<<" and "<<obj.getName()<<" and "<<obj.getSign();
+	return(os);
+}
 
 const Form& Form::operator=(const Form &other)
 {
