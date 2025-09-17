@@ -2,6 +2,6 @@
 
 int main()
 {
-	ScalarConverter::convert("67");
+	ScalarConverter::convert("a");
 	return(0);
 }

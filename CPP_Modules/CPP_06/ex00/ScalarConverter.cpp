@@ -1,4 +1,5 @@
 #include "ScalarConverter.hpp"
+#include <sstream>
 
 // ------------- CONSTRUCTORS AND DESTRUCTOR -------------
 
@@ -49,8 +50,6 @@ bool is_float(std::string literal)
 		if (!std::isdigit(literal[i]))
 			return (false);
 	}
-	// if (literal[literal.length() - 1] != 'f')
-	// 	return (false);
 	std::cout<<"Float: "<<static_cast<float>(atof(literal.c_str()))<<std::endl;
 	return (true);
 }
@@ -78,8 +77,6 @@ bool is_double(std::string literal)
 		if (!std::isdigit(literal[i]))
 			return (false);
 	}
-	// if (point == false)
-	// 	return (false);
 	std::cout<<"Double: "<<static_cast<double>(atof(literal.c_str()))<<std::endl;
 	return (true);
 }
@@ -142,6 +139,13 @@ void ScalarConverter::convert(std::string literal)
 		return ;
 	}
 	is_char(literal);
+	if (literal.length() == 1 && std::isalpha(literal[0]))
+	{
+		int n = static_cast<int>(literal.c_str()[0]);
+		std::stringstream ss;
+		ss << n;
+		literal = ss.str();
+	}
 	is_int(literal);
 	is_float(literal);
 	is_double(literal);
