@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_file_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbiagi <mbiagi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 23:22:25 by edraccan          #+#    #+#             */
-/*   Updated: 2025/07/11 08:02:26 by mbiagi           ###   ########.fr       */
+/*   Updated: 2025/10/01 17:17:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,8 @@ int	parse_map_content(t_data *data)
 {
 	int	i;
 	int	j;
-	int	n_player;
 
 	i = -1;
-	n_player = 0;
 	while (data->map[++i])
 	{
 		j = -1;
