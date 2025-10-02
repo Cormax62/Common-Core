@@ -59,9 +59,9 @@ int		Span::shortestSpan()
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); i++)
 	{
 		min = *i;
+		max = 2147483647;
 		for (std::vector<int>::iterator j = v.begin(); j != v.end(); j++)
 		{
-			max = 2147483647;
 			if (min != *j)
 			{
 				if (abs(min - *j) < abs(min - max))
