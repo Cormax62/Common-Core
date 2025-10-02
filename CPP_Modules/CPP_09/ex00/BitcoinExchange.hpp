@@ -8,7 +8,7 @@
 class BitcoinExchange
 {
 private:
-	std::vector<std::string> line;
+	
 public:
     BitcoinExchange();
     BitcoinExchange(const BitcoinExchange& other);
@@ -16,7 +16,7 @@ public:
 
     const BitcoinExchange& operator=(const BitcoinExchange& other);
 
-    void	fillVector(const char* file);
+    void	fillVector(std::vector<std::string> v, const char* file);
 };
 
 #endif

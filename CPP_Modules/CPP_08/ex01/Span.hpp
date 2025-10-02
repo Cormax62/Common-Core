@@ -2,6 +2,7 @@
 # define SPAN_HPP
 
 # include <iostream>
+# include <algorithm>
 # include <vector>
 # include <cmath>
 
@@ -9,7 +10,7 @@ class Span
 {
 private:
 	std::vector<int>	v;
-	int					limit;
+	unsigned int		limit;
 public:
 	Span(unsigned int n);
 	Span(const Span& other);
@@ -27,6 +28,14 @@ public:
 	public:
 		const char *what() const throw() {
 			return("limit reached");
+	}
+	};
+
+	class NotEnoughMember : public std::exception
+	{
+	public:
+		const char *what() const throw() {
+			return("not enough numbers");
 	}
 	};
 };

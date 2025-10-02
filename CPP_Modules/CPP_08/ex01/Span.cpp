@@ -32,7 +32,7 @@ const Span& Span::operator=(const Span& other)
 
 void Span::addNumber(int num)
 {
-	if (static_cast<int>(v.size()) == limit)
+	if (static_cast<unsigned int>(v.size()) == limit)
 		throw LimitReached();
 	v.push_back(num);
 }
@@ -42,7 +42,7 @@ void Span::randomFill()
 	int n;
 
 	srand((unsigned)time(NULL));
-	for (int i = 0; i < limit; i++)
+	for (unsigned int i = 0; i < limit; i++)
 	{
 		n = rand();
 		v.push_back(n);
@@ -53,9 +53,13 @@ int		Span::shortestSpan()
 {
 	int	min;
 	int	max;
-	int	temp = 2147483647;
+	int	temp = *std::max_element(v.begin(), v.end());
 	int	temp2 = 0;
 
+	if (v.size() == 0 || v.size() == 1)
+	{
+		throw NotEnoughMember();
+	}
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); i++)
 	{
 		min = *i;
@@ -79,16 +83,8 @@ int		Span::shortestSpan()
 
 int		Span::longestSpan()
 {
-	std::vector<int>::iterator it;
-	int	min = 2147483647;
-	int	max = -2147483648;
+	std::vector<int>::iterator max = std::max_element(v.begin(), v.end());
+	std::vector<int>::iterator min = std::min_element(v.begin(), v.end());
 
-	for (it = v.begin(); it != v.end(); it++)
-	{
-		if (min > *it)
-			min = *it;
-		if (max < *it)
-			max = *it;
-	}
-	return (abs(max - min));
+	return (*max - *min);
 }
