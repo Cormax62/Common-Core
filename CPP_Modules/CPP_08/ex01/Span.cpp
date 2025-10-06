@@ -51,10 +51,7 @@ void Span::randomFill()
 
 int		Span::shortestSpan()
 {
-	int	min;
-	int	max;
 	int	temp = *std::max_element(v.begin(), v.end());
-	int	temp2 = 0;
 
 	if (v.size() == 0 || v.size() == 1)
 	{
@@ -62,23 +59,16 @@ int		Span::shortestSpan()
 	}
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); i++)
 	{
-		min = *i;
-		max = 2147483647;
 		for (std::vector<int>::iterator j = v.begin(); j != v.end(); j++)
 		{
-			if (min != *j)
+			if (*i != *j)
 			{
-				if (abs(min - *j) < abs(min - max))
-					max = *j;
+				if (abs(*i - *j) < temp)
+					temp = abs(*i - *j);
 			}
 		}
-		if (abs(temp - temp2) > abs(min - max))
-		{
-			temp = min;
-			temp2 = max;
-		}
 	}
-	return (abs(temp - temp2));
+	return (temp);
 }
 
 int		Span::longestSpan()
