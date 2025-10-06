@@ -2,7 +2,10 @@
 # define BITCOINEXCHANGE_HPP
 
 # include <iostream>
-# include <vector>
+# include <stdlib.h>
+# include <string>
+# include <fstream>
+# include <map>
 # include <ostream>
 
 class BitcoinExchange
@@ -16,7 +19,7 @@ public:
 
     const BitcoinExchange& operator=(const BitcoinExchange& other);
 
-    void	fillVector(std::vector<std::string> v, const char* file);
+    void	fillMap(std::map<std::string, float> v, const char* file);
 };
 
 #endif
