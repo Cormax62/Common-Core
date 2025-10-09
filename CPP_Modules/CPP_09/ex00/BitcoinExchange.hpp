@@ -19,7 +19,7 @@ public:
 
     const BitcoinExchange& operator=(const BitcoinExchange& other);
 
-    void	fillMap(std::map<std::string, float> v, const char* file);
+    void	fillMap(std::map<std::string, float> database, const char* file);
 };
 
 #endif

@@ -1,7 +1,7 @@
 # PROGRAM NAME
 NAME =	RPN
 # SRCS
-SRC = main.cpp BitcoinExchange.cpp
+SRC = main.cpp RPN.cpp
 
 CC = c++
 RM = rm -rf

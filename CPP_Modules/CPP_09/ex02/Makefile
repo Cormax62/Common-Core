@@ -1,7 +1,7 @@
 # PROGRAM NAME
 NAME =	PmergeMe
 # SRCS
-SRC = main.cpp BitcoinExchange.cpp
+SRC = main.cpp
 
 CC = c++
 RM = rm -rf
