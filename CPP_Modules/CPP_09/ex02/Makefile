@@ -1,7 +1,7 @@
 # PROGRAM NAME
 NAME =	PmergeMe
 # SRCS
-SRC = main.cpp
+SRC = main.cpp PmergeMe.cpp
 
 CC = c++
 RM = rm -rf
