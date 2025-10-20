@@ -2,7 +2,6 @@
 
 std::vector<int> sortVector(std::vector<int> vet)
 {
-	std::vector<int>	seq;
 	std::vector<int>	small;
 	std::vector<int>	large;
 
@@ -43,94 +42,31 @@ std::vector<int> sortVector(std::vector<int> vet)
 			large.push_back(n1);
 		}
 	}
-	large = sortVector(large);
-	if (small.size() > 2)
-		seq = getSeq(small);
-	else
-		seq.push_back(1);
-// dividere in un'altra funzione "return (fillVector(large, small, seq));"
-	for (std::vector<int>::iterator it = seq.begin(); it != seq.end(); it++)
-	{
-		std::vector<int>::iterator jt;
-		if (large.size() == 1)
-			jt = large.begin();
-		else
-			jt = large.begin() + (large.size() / 2) - 1;
-		if (small[*it - 1] <= *jt)
+    large = sortVector(large);
+	small = getSeq(small);
+    for (size_t i = 0; i < small.size(); ++i)
+    {
+		size_t	left = 0;
+		size_t	right = large.size();
+        int		value = small[i];
+
+        if (large.empty())
+        {
+            large.push_back(value);
+            continue;
+        }
+        while (left < right)
 		{
-			while (jt >= large.begin())
-			{
-				if (*jt < small[*it - 1])
-				{
-					large.insert(jt, small[*it - 1]);
-					break;
-				}
-				if (jt == large.begin())
-				{
-					large.insert(large.begin(), small[*it - 1]);
-					break;
-				}
-				jt--;
-			}
+			size_t	mid = left + (right - left) / 2;
+
+			if (large[mid] < value)
+				left = mid + 1;
+			else
+				right = mid;
 		}
-		else if (small[*it - 1] > *jt)
-		{
-			while (jt != large.end())
-			{
-				if (*jt > small[*it - 1])
-				{
-					large.insert(jt, small[*it - 1]);
-					break;
-				}
-				jt++;
-			}
-			if (jt == large.end())
-				large.insert(jt, small[*it - 1]);
-		}
-	}
-	std::vector<int>::iterator tt = seq.begin();
-	for (std::vector<int>::iterator it = small.begin(); it != small.end(); it++)
-	{
-		std::vector<int>::iterator jt;
-		if (large.size() == 1)
-			jt = large.begin();
-		else
-			jt = large.begin() + (large.size() / 2) - 1;
-		if (small[*tt - 1] == *it)
-			tt++;
-		else if (*it <= *jt)
-		{
-			while (jt >= large.begin())
-			{
-				if (*jt < *it)
-				{
-					large.insert(jt, *it);
-					break;
-				}
-				else if (jt == large.begin())
-				{
-					large.insert(large.begin(), *it);
-					break;
-				}
-				jt--;
-			}
-		}
-		else if (*it > *jt)
-		{
-			while (jt != large.end())
-			{
-				if (*jt > *it)
-				{
-					large.insert(jt, *it);
-					break;
-				}
-				jt++;
-			}
-			if (jt == large.end())
-				large.insert(large.end(), *it);
-		}
-	}
-	return large;
+		large.insert(large.begin() + left, value);
+    }
+    return large;
 }
 
 bool isValid(char** mtrx)
