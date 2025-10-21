@@ -1,74 +1,5 @@
 #include "PmergeMe.hpp"
 
-std::vector<int> sortVector(std::vector<int> vet)
-{
-	std::vector<int>	small;
-	std::vector<int>	large;
-
-	if (vet.size() == 1)
-		return vet;
-	else if (vet.size() == 2)
-	{
-		if (vet[0] < vet[1])
-			return vet;
-		else
-		{
-			std::vector<int> n;
-			n.push_back(vet.back());
-			n.push_back(vet.front());
-			return n;
-		}
-	}
-	for (std::vector<int>::iterator it = vet.begin(); it != vet.end(); it += 2)
-	{
-		int	n1 = *it;
-		int	n2;
-
-		if (it + 1 != vet.end())
-			n2 = *(it + 1);
-		else
-		{
-			small.push_back(n1);
-			break;
-		}
-		if (n1 < n2)
-		{
-			small.push_back(n1);
-			large.push_back(n2);
-		}
-		else
-		{
-			small.push_back(n2);
-			large.push_back(n1);
-		}
-	}
-    large = sortVector(large);
-	small = getSeq(small);
-    for (size_t i = 0; i < small.size(); ++i)
-    {
-		size_t	left = 0;
-		size_t	right = large.size();
-        int		value = small[i];
-
-        if (large.empty())
-        {
-            large.push_back(value);
-            continue;
-        }
-        while (left < right)
-		{
-			size_t	mid = left + (right - left) / 2;
-
-			if (large[mid] < value)
-				left = mid + 1;
-			else
-				right = mid;
-		}
-		large.insert(large.begin() + left, value);
-    }
-    return large;
-}
-
 bool isValid(char** mtrx)
 {
 	int i;
@@ -87,6 +18,10 @@ bool isValid(char** mtrx)
 
 int main(int ac, char** av)
 {
+	struct timeval	start;
+	struct timeval	end;
+	double			time;
+
 	if (ac == 1)
 	{
 		std::cout<<"Wrong arguments number."<<std::endl;
@@ -96,11 +31,40 @@ int main(int ac, char** av)
 	{
 		std::cout<<"Non-valid argument."<<std::endl;
 	}
-	std::vector<int> vet = createVector(&av[1]);
-	vet = sortVector(vet);
-	for (std::vector<int>::iterator it = vet.begin(); it != vet.end(); it++)
+	std::vector<int> vet1 = createVector<std::vector<int> >(&av[1]);
+	std::cout<<"Before: ";
+	for (std::vector<int>::iterator it = vet1.begin(); it != vet1.end(); it++)
 	{
-		std::cout<<*it<<std::endl;
+		std::cout<<" "<<*it;
 	}
+	std::cout<<std::endl;
+	gettimeofday(&start, NULL);
+	vet1 = sortVector(vet1);
+	gettimeofday(&end, NULL);
+	time = static_cast<double>((end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec)) / 1000000.0;
+	std::cout<<"After: ";
+	for (std::vector<int>::iterator it = vet1.begin(); it != vet1.end(); it++)
+	{
+		std::cout<<" "<<*it;
+	}
+	std::cout<<std::endl;
+	std::cout<<"Time to process a range of "<<std::fixed<<std::setprecision(6)<<ac - 1<<" elements with std::vector : "<<time<<" μs"<<std::endl;
+	std::deque<int> vet2 = createVector<std::deque<int> >(&av[1]);
+	// std::cout<<"Before: ";
+	// for (std::deque<int>::iterator it = vet2.begin(); it != vet2.end(); it++)
+	// {
+	// 	std::cout<<" "<<*it;
+	// }
+	gettimeofday(&start, NULL);
+	vet2 = sortVector(vet2);
+	gettimeofday(&end, NULL);
+	time = static_cast<double>((end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec)) / 1000000.0;
+	// std::cout<<"After: ";
+	// for (std::deque<int>::iterator it = vet2.begin(); it != vet2.end(); it++)
+	// {
+	// 	std::cout<<" "<<*it;
+	// }
+	// std::cout<<std::endl;
+	std::cout<<"Time to process a range of "<<std::fixed<<std::setprecision(6)<<ac - 1<<" elements with std::deque : "<<time<<" μs"<<std::endl;
 	return 0;
 }
