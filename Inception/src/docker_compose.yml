@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+
+    mariadb:
+        build: ./src/requirements/MariaDB
+        image: mariadb:42
+        container_name: mariadb
+        env_file:
+            - ./.env
+        networks:
+            - inception
+        expose:
+            - "3306"
+        restart: always
+
+    wordpress:
+        build: ./src/requirements/WordPress
+        image: wordpress:42
+        container_name: wordpress
+        env_file:
+            - ./.env
+        networks:
+            - inception
+        depends_on:
+            - mariadb
+        expose:
+            - "9000"
+        restart: always
+
+    nginx:
+        build: ./src/requirements/NGINX
+        image: nginx:42
+        container_name: nginx
+        env_file:
+            - ./.env
+        networks:
+            - inception
+        ports:
+            - "443:443"
+        depends_on:
+            - wordpress
+        restart: always
+
+networks:
+    inception:
+        driver: bridge
+        name: inception

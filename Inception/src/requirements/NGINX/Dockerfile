@@ -1,6 +1,8 @@
 FROM debian:bullseye-slim
 
-RUN apt-get update && apt-get install -y nginx openssl && apt-get clean && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
+RUN apt-get update && apt-get install -y nginx openssl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    /var/cache/apt/archives
 
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 
