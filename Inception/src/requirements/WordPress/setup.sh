@@ -6,35 +6,21 @@ set -e
 # Script per configurare WordPress in un container Docker
 # ============================================================================
 
-# Controllo che le variabili d'ambiente siano state fornite
-if [ -z "$MYSQL_HOST" ] || [ -z "$MYSQL_DATABASE" ] || [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ]; then
-    echo "Errore: Variabili database non impostate"
-    exit 1
-fi
-
-if [ -z "$WP_TITLE" ] || [ -z "$WP_ADMIN_USER" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z "$WP_ADMIN_EMAIL" ]; then
-    echo "Errore: Variabili WordPress non impostate"
-    exit 1
-fi
-
 echo "=========================================="
 echo "Avvio setup di WordPress..."
 echo "=========================================="
 
 # Attendi che MariaDB sia pronto
-echo "Attesa connessione a MariaDB..."
-until mysqladmin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" &>/dev/null; do
-    echo "MariaDB non è ancora pronto... Attesa..."
-    sleep 2
-done
-echo "✓ MariaDB è raggiungibile"
-
-# Imposta la directory di WordPress
-WP_DIR="/var/www/html"
-cd "$WP_DIR"
+# echo "Attesa connessione a MariaDB..."
+# until mysqladmin ping -h "mariadb" --silent &>/dev/null; do
+#     echo "MariaDB non è ancora pronto... Attesa..."
+#     sleep 2
+# done
+# echo "✓ MariaDB è raggiungibile"
+sleep 30
 
 # Scarica WordPress se non esiste
-if [ ! -f "wp-config.php" ]; then
+if [ ! -f "$WP_PATH/wp-config.php" ]; then
     echo "Download di WordPress..."
     wp core download --allow-root
     echo "✓ WordPress scaricato"
@@ -56,20 +42,31 @@ if [ ! -f "wp-config.php" ]; then
         --title="$WP_TITLE" \
         --admin_user="$WP_ADMIN_USER" \
         --admin_password="$WP_ADMIN_PASSWORD" \
-        --admin_email="$WP_ADMIN_EMAIL" \
-        --skip-email \
+        --admin_email="$WP_ADMIN_EMAIL" \\
         --allow-root
     echo "✓ WordPress installato"
 else
     echo "✓ WordPress già configurato"
 fi
 
+if ! wp user get ${WP_USER} --path=$WP_PATH --allow-root > /dev/null 2>&1; then
+    echo "Creazione utente ${WP_USER}..."
+    wp user create ${WP_USER} ${WP_EMAIL} \
+        --role=author \
+        --user_pass=${WP_PASSWORD} \
+        --path=$WP_PATH \
+        --allow-root
+    echo "✓ Utente ${WP_USER} creato."
+else
+    echo "✓ Utente ${WP_USER} già esistente."
+fi
+
+wp option update siteurl "https://$WP_URL" --allow-root
+wp option update home "https://$WP_URL" --allow-root
+
 echo "=========================================="
 echo "✓ Setup di WordPress completato!"
-echo "=========================================="
-echo "Titolo: $WP_TITLE"
-echo "Admin: $WP_ADMIN_USER"
-echo "URL: $WP_URL"
+echo "* Titolo: $WP_TITLE"
 echo "=========================================="
 
 # Avvia PHP-FPM

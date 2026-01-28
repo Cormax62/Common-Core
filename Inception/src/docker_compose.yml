@@ -3,19 +3,22 @@ version: '3.8'
 services:
 
     mariadb:
-        build: ./src/requirements/MariaDB
+        build: ./requirements/MariaDB
         image: mariadb:42
         container_name: mariadb
         env_file:
             - ./.env
         networks:
             - inception
-        expose:
-            - "3306"
+        # healthcheck:
+        #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        #     interval: 10s
+        #     timeout: 5s
+        #     retries: 5
         restart: always
 
     wordpress:
-        build: ./src/requirements/WordPress
+        build: ./requirements/WordPress
         image: wordpress:42
         container_name: wordpress
         env_file:
@@ -24,12 +27,10 @@ services:
             - inception
         depends_on:
             - mariadb
-        expose:
-            - "9000"
         restart: always
 
     nginx:
-        build: ./src/requirements/NGINX
+        build: ./requirements/NGINX
         image: nginx:42
         container_name: nginx
         env_file:

@@ -1,73 +1,57 @@
 #!/bin/bash
 set -e
 
-# ============================================================================
-# MARIADB SETUP SCRIPT
-# Script per configurare MariaDB in un container Docker
-# ============================================================================
+SOCKET="/run/mysqld/mysqld.sock"
+mkdir -p /run/mysqld
+chown -R mysql:mysql /var/lib/mysql /run/mysqld
+chmod 777 /run/mysqld
 
-# Controllo che le variabili d'ambiente siano state fornite
-if [ -z "$MYSQL_ROOT_PASSWORD" ] || [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_DATABASE" ] || [ -z "$MYSQL_USER" ]; then
-    echo "Errore: Tutte le variabili d'ambiente devono essere impostate"
-    echo "MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD"
-    exit 1
-fi
-
-echo "=========================================="
-echo "Avvio setup di MariaDB..."
-echo "=========================================="
-
-# Inizializza MariaDB se non è già inizializzato
-if [ ! -d "/var/lib/mysql/mysql" ]; then
+if [ ! -f "/var/lib/mysql/.bootstrap_done" ]; then
     echo "Inizializzazione MariaDB..."
-    mysql_install_db --user=mysql --datadir=/var/lib/mysql
-    echo "✓ MariaDB inizializzato"
+    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+    FIRST_RUN=1
+else
+    echo "✓ MariaDB già inizializzato"
+    FIRST_RUN=0
 fi
 
-# Avvia MariaDB in background
-echo "Avvio MariaDB..."
-mysqld --user=mysql --datadir=/var/lib/mysql &
-MYSQL_PID=$!
+# Avvia MariaDB in background per la configurazione iniziale
+mysqld_safe --user=mysql --datadir=/var/lib/mysql --socket=$SOCKET &
+MYSQL_PID="$!"
 
-# Attendi che MariaDB sia pronto
-echo "Attesa avvio di MariaDB..."
-for i in {1..30}; do
-    if mysqladmin ping &>/dev/null; then
-        echo "✓ MariaDB è pronto"
+# Attesa attiva: molto meglio di sleep 21
+echo "Attesa avvio socket..."
+for i in {30..0}; do
+    if mysqladmin -u root --socket=$SOCKET ping --silent; then
         break
     fi
     sleep 1
 done
 
-# Configura MariaDB
-echo "Configurazione database e utente..."
-mysql <<-EOF
-	-- Imposta la password di root
-	ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-	
-	-- Crea il database
-	CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;
-	
-	-- Crea l'utente e assegna i permessi
-	CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
-	GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
-	
-	-- Applica le modifiche
-	FLUSH PRIVILEGES;
-EOF
-echo "✓ Database '$MYSQL_DATABASE' e utente '$MYSQL_USER' configurati"
+if [ "$i" = 0 ]; then
+    echo "Errore: MariaDB non risponde sul socket."
+    exit 1
+fi
 
-echo "=========================================="
-echo "✓ Setup di MariaDB completato!"
-echo "=========================================="
-echo "Database: $MYSQL_DATABASE"
-echo "Utente: $MYSQL_USER"
-echo "Host: %"
-echo "=========================================="
+# Configurazione (usiamo sempre il --socket per evitare problemi di rete/hostname)
+echo "Configurazione database..."
+mysql -u root --socket=$SOCKET <<EOSQL
+    CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    ALTER USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+    
+    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+    ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+    GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+    FLUSH PRIVILEGES;
+EOSQL
 
-# Ferma il processo temporaneo e riavvia MariaDB in foreground
-kill "$MYSQL_PID"
-wait "$MYSQL_PID" 2>/dev/null
+touch /var/lib/mysql/.bootstrap_done
 
-echo "Avvio MariaDB in foreground..."
-exec mysqld --user=mysql --datadir=/var/lib/mysql
+echo "Spegnimento temporaneo per riavvio in foreground..."
+mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" --socket=$SOCKET shutdown
+wait "$MYSQL_PID"
+
+echo "Avvio MariaDB definitivo..."
+exec mysqld --user=mysql --datadir=/var/lib/mysql --socket=$SOCKET
