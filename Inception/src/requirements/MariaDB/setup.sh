@@ -1,57 +1,103 @@
+# #!/bin/bash
+# set -e
+
+# echo "=========================================="
+# echo "Avvio setup di MariaDB..."
+# echo "=========================================="
+
+# mkdir -p /var/lib/mysql /var/run/mysqld
+# chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+
+# # Inizializza MariaDB se non è già inizializzato
+# # if [ ! -f "/READY" ]; then
+# #     echo "Inizializzazione MariaDB..."
+# #     mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql
+# #     echo "✓ MariaDB inizializzato"
+# #     touch /READY
+# # else
+# #     echo "✓ MariaDB già inizializzato"
+# # fi
+
+# if [ ! -d /var/lib/mysql/mysql ]; then
+#     echo "Inizializzazione MariaDB..."
+#     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+#     echo "✓ MariaDB inizializzato"
+# else
+#     echo "✓ MariaDB già inizializzato"
+# fi
+
+
+# # Avvia MariaDB in background
+# echo "Avvio MariaDB..."
+
+# echo "Attesa avvio di MariaDB..."
+# i=30
+# while [ $i -gt 0 ]; do
+#     if mysqladmin ping --silent; then
+#         echo "✓ MariaDB è pronto"
+#         break
+#     fi
+#     sleep 1
+#     i=$((i-1))
+# done
+
+# # Configura MariaDB
+# echo "Configurazione database e utente..."
+
+# INIT_FILE="/tmp/init.sql"
+# cat << EOSQL > $INIT_FILE
+# CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+
+# CREATE USER IF NOT EXISTS '${MYSQL_ROOT}'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+# CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+
+# GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_ROOT}'@'%' WITH GRANT OPTION;
+# GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+
+# FLUSH PRIVILEGES;
+
+# EOSQL
+# echo "✓ Database '$MYSQL_DATABASE' e utente '$MYSQL_USER' configurati"
+
+# echo "=========================================="
+# echo "✓ Setup di MariaDB completato!"
+# echo "* Database: $MYSQL_DATABASE"
+# echo "=========================================="
+
+# echo "Avvio MariaDB in foreground..."
+# exec mysqld --user=mysql --datadir=/var/lib/mysql --init-file="$INIT_FILE" --bind-address=0.0.0.0
+
 #!/bin/bash
 set -e
 
-SOCKET="/run/mysqld/mysqld.sock"
-mkdir -p /run/mysqld
-chown -R mysql:mysql /var/lib/mysql /run/mysqld
-chmod 777 /run/mysqld
+echo "== MariaDB bootstrap =="
 
-if [ ! -f "/var/lib/mysql/.bootstrap_done" ]; then
+mkdir -p /var/lib/mysql /var/run/mysqld
+chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+
+# Configure bind-address for all interfaces
+sed -i 's/^bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# Init DB se vuoto
+if [ ! -d /var/lib/mysql/mysql ]; then
     echo "Inizializzazione MariaDB..."
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
-    FIRST_RUN=1
-else
-    echo "✓ MariaDB già inizializzato"
-    FIRST_RUN=0
 fi
 
-# Avvia MariaDB in background per la configurazione iniziale
-mysqld_safe --user=mysql --datadir=/var/lib/mysql --socket=$SOCKET &
-MYSQL_PID="$!"
-
-# Attesa attiva: molto meglio di sleep 21
-echo "Attesa avvio socket..."
-for i in {30..0}; do
-    if mysqladmin -u root --socket=$SOCKET ping --silent; then
-        break
-    fi
-    sleep 1
-done
-
-if [ "$i" = 0 ]; then
-    echo "Errore: MariaDB non risponde sul socket."
-    exit 1
-fi
-
-# Configurazione (usiamo sempre il --socket per evitare problemi di rete/hostname)
-echo "Configurazione database..."
-mysql -u root --socket=$SOCKET <<EOSQL
-    CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
-    ALTER USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
-    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-    
-    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
-    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-    ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-    GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
-    FLUSH PRIVILEGES;
+# Prepare initialization SQL
+INIT_FILE="/tmp/init.sql"
+cat << EOSQL > $INIT_FILE
+USE mysql;
+DELETE FROM user WHERE User='';
+DELETE FROM user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1', '%');
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
+FLUSH PRIVILEGES;
 EOSQL
 
-touch /var/lib/mysql/.bootstrap_done
-
-echo "Spegnimento temporaneo per riavvio in foreground..."
-mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" --socket=$SOCKET shutdown
-wait "$MYSQL_PID"
-
-echo "Avvio MariaDB definitivo..."
-exec mysqld --user=mysql --datadir=/var/lib/mysql --socket=$SOCKET
+echo "Starting MariaDB with initialization..."
+exec mysqld --user=mysql --datadir=/var/lib/mysql --bind-address=0.0.0.0 --init-file="$INIT_FILE"

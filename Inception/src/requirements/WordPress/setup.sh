@@ -6,6 +6,8 @@ set -e
 # Script per configurare WordPress in un container Docker
 # ============================================================================
 
+sleep 30
+
 echo "=========================================="
 echo "Avvio setup di WordPress..."
 echo "=========================================="
@@ -17,7 +19,6 @@ echo "=========================================="
 #     sleep 2
 # done
 # echo "✓ MariaDB è raggiungibile"
-sleep 30
 
 # Scarica WordPress se non esiste
 if [ ! -f "$WP_PATH/wp-config.php" ]; then

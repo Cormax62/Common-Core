@@ -17,17 +17,17 @@ services:
         #     retries: 5
         restart: always
 
-    wordpress:
-        build: ./requirements/WordPress
-        image: wordpress:42
-        container_name: wordpress
-        env_file:
-            - ./.env
-        networks:
-            - inception
-        depends_on:
-            - mariadb
-        restart: always
+    # wordpress:
+    #     build: ./requirements/WordPress
+    #     image: wordpress:42
+    #     container_name: wordpress
+    #     env_file:
+    #         - ./.env
+    #     networks:
+    #         - inception
+    #     depends_on:
+    #         - mariadb
+    #     restart: always
 
     nginx:
         build: ./requirements/NGINX
@@ -39,8 +39,8 @@ services:
             - inception
         ports:
             - "443:443"
-        depends_on:
-            - wordpress
+        # depends_on:
+        #     - wordpress
         restart: always
 
 networks:
