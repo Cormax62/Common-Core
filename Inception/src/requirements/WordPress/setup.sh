@@ -1,13 +1,6 @@
 #!/bin/bash
 set -e
 
-# ============================================================================
-# WORDPRESS SETUP SCRIPT
-# Script per configurare WordPress in un container Docker
-# ============================================================================
-
-sleep 30
-
 echo "=========================================="
 echo "Avvio setup di WordPress..."
 echo "=========================================="
@@ -29,13 +22,18 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
     # Configura WordPress
     echo "Configurazione WordPress..."
     wp config create \
-        --dbname="$MYSQL_DATABASE" \
-        --dbuser="$MYSQL_USER" \
-        --dbpass="$MYSQL_PASSWORD" \
-        --dbhost="$MYSQL_HOST" \
+        --dbname="$WP_DB_DATABASE" \
+        --dbuser="$WP_DB_USER" \
+        --dbpass="$WP_DB_PASSWORD" \
+        --dbhost="mariadb" \
         --allow-root
     echo "✓ File wp-config.php creato"
-    
+
+#     sed -i '/Add any custom values between this line and the "stop editing" line./r /dev/stdin' /var/www/html/wp-config.php <<'EOF'
+#     define('FORCE_SSL_ADMIN', true);
+#     $_SERVER['HTTPS'] = 'on';
+# EOF
+
     # Installa WordPress
     echo "Installazione WordPress..."
     wp core install \
@@ -43,8 +41,8 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
         --title="$WP_TITLE" \
         --admin_user="$WP_ADMIN_USER" \
         --admin_password="$WP_ADMIN_PASSWORD" \
-        --admin_email="$WP_ADMIN_EMAIL" \\
-        --allow-root
+        --admin_email="$WP_ADMIN_EMAIL" \
+        --allow-root --skip-email
     echo "✓ WordPress installato"
 else
     echo "✓ WordPress già configurato"
