@@ -52,7 +52,9 @@ services:
 
 volumes:
     mariadb:
+        driver: local
     wordpress:
+        driver: local
 
 networks:
     inception:
