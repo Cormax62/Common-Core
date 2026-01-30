@@ -3,6 +3,7 @@ FROM debian:bullseye-slim
 RUN apt-get update \
     && apt-get install -y wget curl mariadb-client \
     && apt-get install -y php php-fpm php-mysql php-cli php-curl \
+    php-zip php-redis vim iputils-ping \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/www/html
@@ -15,6 +16,9 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && wp cli update
 
 RUN mkdir -p /var/run/php
+
+RUN useradd -m -s /bin/bash www-data 2>/dev/null || true
+RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 9000
 

@@ -8,14 +8,16 @@ services:
         container_name: mariadb
         env_file:
             - ./.env
+        volumes:
+            - mariadb:/var/lib/mysql
         networks:
             - inception
         healthcheck:
-            test: ["CMD-SHELL", "mysqladmin ping -u root -p{$MYSQL_ROOT_PASSWORD}"]
+            test: ["CMD-SHELL", "mysqladmin ping -u root -p$MYSQL_ROOT_PASSWORD"]
             interval: 10s
             timeout: 5s
             retries: 5
-            # start_period: 30s
+            # start_period: 5s
         restart: always
 
     wordpress:
@@ -24,6 +26,8 @@ services:
         container_name: wordpress
         env_file:
             - ./.env
+        volumes:
+            - wordpress:/var/www/html
         networks:
             - inception
         depends_on:
@@ -36,6 +40,8 @@ services:
         container_name: nginx
         env_file:
             - ./.env
+        volumes:
+            - wordpress:/var/www/html
         networks:
             - inception
         ports:
@@ -43,6 +49,10 @@ services:
         depends_on:
             - wordpress
         restart: always
+
+volumes:
+    mariadb:
+    wordpress:
 
 networks:
     inception:

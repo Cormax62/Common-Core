@@ -70,21 +70,21 @@
 #!/bin/bash
 set -e
 
-echo "== MariaDB bootstrap =="
+echo "== Avvio bootstrap di MariaDB =="
 
 mkdir -p /var/lib/mysql /var/run/mysqld
 chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
-# Configure bind-address for all interfaces
+# Configura bind-address per accettare connessioni remote
 sed -i 's/^bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf
 
-# Init DB se vuoto
+# Inizializzazione DB se vuoto
 if [ ! -d /var/lib/mysql/mysql ]; then
     echo "Inizializzazione MariaDB..."
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 fi
 
-# Prepare initialization SQL
+# Crea file di inizializzazione
 INIT_FILE="/tmp/init.sql"
 cat << EOSQL > $INIT_FILE
 USE mysql;
@@ -99,5 +99,6 @@ GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
 
-echo "Starting MariaDB with initialization..."
+echo "Avvio di MariaDB con inizializzazione..."
 exec mysqld --user=mysql --datadir=/var/lib/mysql --bind-address=0.0.0.0 --init-file="$INIT_FILE"
+echo "== Bootstrap di MariaDB completato =="

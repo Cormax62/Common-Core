@@ -5,20 +5,12 @@ echo "=========================================="
 echo "Avvio setup di WordPress..."
 echo "=========================================="
 
-# Attendi che MariaDB sia pronto
-# echo "Attesa connessione a MariaDB..."
-# until mysqladmin ping -h "mariadb" --silent &>/dev/null; do
-#     echo "MariaDB non è ancora pronto... Attesa..."
-#     sleep 2
-# done
-# echo "✓ MariaDB è raggiungibile"
-
 # Scarica WordPress se non esiste
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
     echo "Download di WordPress..."
     wp core download --allow-root
     echo "✓ WordPress scaricato"
-    
+
     # Configura WordPress
     echo "Configurazione WordPress..."
     wp config create \
@@ -28,11 +20,6 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
         --dbhost="mariadb" \
         --allow-root
     echo "✓ File wp-config.php creato"
-
-#     sed -i '/Add any custom values between this line and the "stop editing" line./r /dev/stdin' /var/www/html/wp-config.php <<'EOF'
-#     define('FORCE_SSL_ADMIN', true);
-#     $_SERVER['HTTPS'] = 'on';
-# EOF
 
     # Installa WordPress
     echo "Installazione WordPress..."
@@ -60,6 +47,10 @@ else
     echo "✓ Utente ${WP_USER} già esistente."
 fi
 
+echo "Configurazione permessi..."
+chmod -R 777 /var/www/html
+chown -R www-data:www-data /var/www/html
+
 wp option update siteurl "https://$WP_URL" --allow-root
 wp option update home "https://$WP_URL" --allow-root
 
@@ -69,5 +60,7 @@ echo "* Titolo: $WP_TITLE"
 echo "=========================================="
 
 # Avvia PHP-FPM
+echo "stampa path php-fpm"
+which php-fpm7.4
 echo "Avvio PHP-FPM..."
 exec php-fpm7.4 -F
